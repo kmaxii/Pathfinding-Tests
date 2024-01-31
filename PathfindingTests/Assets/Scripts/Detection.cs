@@ -76,6 +76,7 @@ public class Detection : MonoBehaviour
 
     private void RunDetectionAlgorithm(int i)
     {
+        
         var algorithm = detectionBehaviour[i];
         
         Profiler.BeginSample(algorithm.name, this);

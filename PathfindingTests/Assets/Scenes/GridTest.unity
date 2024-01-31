@@ -241,9 +241,10 @@ MonoBehaviour:
   - {r: 0.77526927, g: 1, b: 0.75, a: 1}
   - {r: 0.32545534, g: 0.19250624, b: 0.3962264, a: 1}
   - {r: 0.44385922, g: 1, b: 0.2783019, a: 1}
-  mapDataSO: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
-  gridSize: 13
-  obsRate: 45
+  mapDataSo: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
+  gridSize: 100
+  obsRate: 23
+  changeToRed: {fileID: 11400000, guid: dee094d6496782c40a06cd142edeb3f1, type: 2}
 --- !u!4 &358771624
 Transform:
   m_ObjectHideFlags: 0
@@ -283,20 +284,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002827208}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d03c826a6130c444c8942dcd308df7ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   detectionBehaviour:
   - {fileID: 11400000, guid: 0ff38aa4268a2a9439f49ab43ba5de81, type: 2}
-  resolutionBehaviour: {fileID: 11400000, guid: b6de68e1ef7dc784d8a79af1eeadd94b, type: 2}
+  - {fileID: 11400000, guid: db224456bd665324a8586123a8d00bd6, type: 2}
+  - {fileID: 11400000, guid: 575c70cd4c4041c4388309e520ff190e, type: 2}
+  resolutionBehaviour: {fileID: 11400000, guid: 86563f6a5f1148641abec13193ea657c, type: 2}
   cancelDurationFactor: 1
   updatesToAverage: 100
   timeMultiplier: 1000
   startPos: {x: 1, y: 1}
-  endPos: {x: 8, y: 8}
-  mapData: {fileID: 0}
+  endPos: {x: 97, y: 97}
+  mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
 --- !u!4 &2002827210
 Transform:
   m_ObjectHideFlags: 0
