@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45b84de3a34e4673a545eef7c14aa0df, type: 3}
   m_Name: Dijkstra
   m_EditorClassIdentifier: 
-  colorExploredNodes: 0
-  exploredNodesColor: {r: 0.5176471, g: 0.36862746, b: 0.7607843, a: 1}
+  mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}

@@ -5,7 +5,7 @@ using UnityEngine.Profiling;
 
 namespace ResolutionBehaviour
 {
-    [CreateAssetMenu(menuName = "Custom/ChangeColorOnColision")]
+    [CreateAssetMenu(menuName = "Custom/Pathfinding/ResolutionBehaviour/DrawPaths")]
     public class DrawPaths : ResolutionBehaviour
     {
         

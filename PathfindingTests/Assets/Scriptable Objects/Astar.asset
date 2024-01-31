@@ -12,8 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e8c53cc27646faa73f08a4543c9146, type: 3}
   m_Name: Astar
   m_EditorClassIdentifier: 
-  colorNeighbours: 1
-  neighbourColor: {r: 0.9764706, g: 0.972549, b: 0.44313726, a: 1}
-  showText: 1
-  colorSearchedNodes: 1
-  searchedNodesColor: {r: 1, g: 0.06844188, b: 0, a: 1}
+  mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
