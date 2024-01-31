@@ -10,9 +10,13 @@ public class GridVisualizer : MonoBehaviour {
     [SerializeField][Range(1, 1000)] private int gridSize;
     [SerializeField][Range(1, 100)] private int obsRate;
 
+    private Dictionary<Vector2Int, SpriteRenderer> tileMap;
+
     public void Awake() {
+        tileMap = new();
         mapDataSO.SetMap(gridSize, obsRate);
         VisualizeGrid();
+        ChangeColorOnPosition(new Vector2Int(10, 10), colorSpace[2]);
     }    
     public void VisualizeGrid() {
         //  Take the data from mapDataSO and visualize the bools as a white or black square
@@ -32,10 +36,12 @@ public class GridVisualizer : MonoBehaviour {
         GameObject tile = baseTilePrefab;
         tile.GetComponent<SpriteRenderer>().color = color;
         Vector3 tilePos = new Vector3(pos.x, pos.y, 0);
-        //  Move the tile so that it centers the tilegrid as a whole
-        tilePos -= new Vector3(mapDataSO.map.GetLength(0) / 2f, mapDataSO.map.GetLength(1) / 2f, 0);
-        
-        
+        tileMap.Add(new Vector2Int((int) tilePos.x, (int) tilePos.y), tile.GetComponent<SpriteRenderer>());
         Instantiate(baseTilePrefab, tilePos, Quaternion.identity, transform);
+        
+    }
+
+    public void ChangeColorOnPosition(Vector2Int pos, Color color) {
+        tileMap[pos].color = color;
     }
 }
