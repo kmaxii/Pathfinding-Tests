@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class MapData : ScriptableObject
 {
-    private bool[,] map;
+    public bool[,] map;
 
     //Method to check a coordinate
     public bool CheckCoordinate(int x, int y)
     {
         return map[x, y];
     }
+    
+    
 
     //Method to set the map to x size and percent chance for each to be false
     public void SetMap(int x, int percent)
