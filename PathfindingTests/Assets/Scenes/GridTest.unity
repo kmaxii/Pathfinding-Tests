@@ -207,7 +207,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2099756366
+--- !u!1 &2002827208
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,36 +215,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2099756368}
-  - component: {fileID: 2099756367}
+  - component: {fileID: 2002827210}
+  - component: {fileID: 2002827209}
   m_Layer: 0
-  m_Name: Map
+  m_Name: Detection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2099756367
+--- !u!114 &2002827209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2099756366}
+  m_GameObject: {fileID: 2002827208}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8def9652459fb814986bc1f2e58c13b0, type: 3}
+  m_Script: {fileID: 11500000, guid: d03c826a6130c444c8942dcd308df7ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &2099756368
+  detectionBehaviour:
+  - {fileID: 11400000, guid: 0ff38aa4268a2a9439f49ab43ba5de81, type: 2}
+  resolutionBehaviour: {fileID: 11400000, guid: b6de68e1ef7dc784d8a79af1eeadd94b, type: 2}
+  maxSimulationTime: 10000
+  cancelDurationFactor: 1
+  updatesToAverage: 100
+  timeMultiplier: 1000
+  circleSpawner: {fileID: 0}
+  spheres: {fileID: 11400000, guid: e93b4de24e1f29541a173050a805e3d0, type: 2}
+  startObject: {fileID: 0}
+  endObject: {fileID: 0}
+--- !u!4 &2002827210
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2099756366}
+  m_GameObject: {fileID: 2002827208}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.147469, y: -0.35987532, z: -0.20308356}
+  m_LocalPosition: {x: 3.996112, y: -0.5421418, z: -0.037042316}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

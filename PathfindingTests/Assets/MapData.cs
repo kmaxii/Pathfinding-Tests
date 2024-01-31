@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class MapData : MonoBehaviour
+
+[CreateAssetMenu(menuName = "Custom/MapData")]
+
+public class MapData : ScriptableObject
 {
     private bool[,] map;
 
