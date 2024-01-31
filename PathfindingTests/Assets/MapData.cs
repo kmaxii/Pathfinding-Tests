@@ -6,6 +6,9 @@ using UnityEngine;
 public class MapData : ScriptableObject
 {
     public bool[,] map;
+    
+    //Property to get the map size
+    public int MapSize => map.GetLength(0);
 
     //Method to check a coordinate
     public bool CheckCoordinate(int x, int y)

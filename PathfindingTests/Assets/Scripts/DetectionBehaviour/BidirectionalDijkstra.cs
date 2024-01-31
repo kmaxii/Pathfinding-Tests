@@ -9,34 +9,19 @@ namespace DetectionBehaviour
     [CreateAssetMenu(menuName = "Custom/Pathfinding/BidirectionalDijkstra")]
     public class BidirectionalDijkstra : DetectionBehaviour
     {
-        [FormerlySerializedAs("colorSearchedNodes")] [SerializeField]
-        private bool colorNodes;
-
-        [SerializeField] private Color colorForSearchedNodesFromStart = new Color(214, 93, 177);
-        [SerializeField] private Color colorForSearchedNodesFromEnd = new Color(132, 94, 194);
-        [SerializeField] private Color combinedNodeColor = new Color(255, 111, 145);
-
-        [Tooltip("Writes the total distance that it would take on all shared nodes in the end")]
-        [SerializeField] private bool writeText;
-
-        
         private Queue<PathNode> _fromStart;
         private Queue<PathNode> _fromEnd;
 
-        private Dictionary<Transform, PathNode> _openFromStart;
-        private Dictionary<Transform, PathNode> _openFromEnd;
+        private Dictionary<Vector2Int, PathNode> _openFromStart;
+        private Dictionary<Vector2Int, PathNode> _openFromEnd;
 
-        private Dictionary<Transform, PathNode> _closedFromStart;
-        private Dictionary<Transform, PathNode> _closedFromEnd;
+        private Dictionary<Vector2Int, PathNode> _closedFromStart;
+        private Dictionary<Vector2Int, PathNode> _closedFromEnd;
 
-        private Transform _start;
-        private Transform _goal;
+        private Vector2Int _start;
+        private Vector2Int _goal;
 
-        private SphereTransforms _sphereTransforms;
-        
-
-        public override LinkedList<Transform> GetShortestPath(Transform start, Transform end,
-            SphereTransforms sphereTransforms)
+        public override LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end)
         {
             _start = start;
             _goal = end;
@@ -44,20 +29,19 @@ namespace DetectionBehaviour
             _fromStart = new Queue<PathNode>();
             _fromEnd = new Queue<PathNode>();
 
-            _closedFromStart = new Dictionary<Transform, PathNode>();
-            _closedFromEnd = new Dictionary<Transform, PathNode>();
+            _closedFromStart = new Dictionary<Vector2Int, PathNode>();
+            _closedFromEnd = new Dictionary<Vector2Int, PathNode>();
 
-            _openFromStart = new Dictionary<Transform, PathNode>();
-            _openFromEnd = new Dictionary<Transform, PathNode>();
+            _openFromStart = new Dictionary<Vector2Int, PathNode>();
+            _openFromEnd = new Dictionary<Vector2Int, PathNode>();
 
-            _sphereTransforms = sphereTransforms;
 
             return GetPath();
         }
 
-        private LinkedList<Transform> GetPath()
+        private LinkedList<Vector2Int> GetPath()
         {
-            LinkedList<Transform> bestPath = new LinkedList<Transform>();
+            LinkedList<Vector2Int> bestPath = new LinkedList<Vector2Int>();
 
             //Special scenario when goal and start can go directly to each other.
             if (GetNeighbours(_start).Contains(_goal))
@@ -101,20 +85,6 @@ namespace DetectionBehaviour
                 MoveToClosedFromEnd(keyValuePair.Value);
 
                 float cost = GetCostOfSharedNode(keyValuePair.Key);
-                
-                if (colorNodes)
-                    keyValuePair.Key.GetComponent<SpriteRenderer>().color = combinedNodeColor;
-
-
-                if (writeText)
-                {
-                    foreach (var sphere1 in _sphereTransforms.AllColliders.Where(sphere =>
-                        sphere.transform == keyValuePair.Key))
-                    {
-                        sphere1.textMeshPro.text = $"{cost}";
-                    }
-                }
-                
 
                 if (cost < totalCost && keyValuePair.Key != _start && keyValuePair.Key != _goal)
                 {
@@ -126,13 +96,13 @@ namespace DetectionBehaviour
             return bestSharedNode;
         }
 
-        private float GetCostOfSharedNode(Transform node)
+        private float GetCostOfSharedNode(Vector2Int node)
         {
             return _closedFromEnd[node].DistanceTraveled + _closedFromStart[node].DistanceTraveled;
         }
 
 
-        private void AddPath(LinkedList<Transform> bestPath, Dictionary<Transform, PathNode> closed, Transform start,
+        private void AddPath(LinkedList<Vector2Int> bestPath, Dictionary<Vector2Int, PathNode> closed, Vector2Int start,
             bool addLast)
         {
             Assert.IsNotNull(closed, "Input Dictionary was null");
@@ -141,7 +111,7 @@ namespace DetectionBehaviour
             if (closed[start].Previous == null)
                 return;
             
-            Transform previous = closed[start].Previous.TilePosition;
+            Vector2Int previous = closed[start].Previous.TilePosition;
             
           
             
@@ -172,18 +142,6 @@ namespace DetectionBehaviour
 
             while (_fromStart.TryDequeue(out var fromStart) && _fromEnd.TryDequeue(out var fromEnd))
             {
-                if (colorNodes)
-                {
-                    fromStart.TilePosition.GetComponent<SpriteRenderer>().color =
-                        _closedFromEnd.ContainsKey(fromStart.TilePosition)
-                            ? combinedNodeColor
-                            : colorForSearchedNodesFromStart;
-
-                    fromEnd.TilePosition.GetComponent<SpriteRenderer>().color =
-                        _closedFromStart.ContainsKey(fromStart.TilePosition)
-                            ? combinedNodeColor
-                            : colorForSearchedNodesFromEnd;
-                }
 
                 MoveToClosedFromStart(fromStart);
                 CheckNeighbours(fromStart, _closedFromStart, _openFromStart, _fromStart);
@@ -217,15 +175,15 @@ namespace DetectionBehaviour
             _closedFromEnd.TryAdd(node.TilePosition, node);
         }
 
-        private void CheckNeighbours(PathNode node, Dictionary<Transform, PathNode> closed,
-            Dictionary<Transform, PathNode> open, Queue<PathNode> queue)
+        private void CheckNeighbours(PathNode node, Dictionary<Vector2Int, PathNode> closed,
+            Dictionary<Vector2Int, PathNode> open, Queue<PathNode> queue)
         {
-            Vector3 tilePosition = node.TilePosition.position;
+            Vector2Int tilePosition = node.TilePosition;
 
             foreach (var neighbour in GetNeighbours(node.TilePosition)
-                .OrderBy(transform => GetDistance(transform.position, tilePosition)))
+                .OrderBy(transform => GetDistance(transform, tilePosition)))
             {
-                float distance = GetDistance(neighbour.position, tilePosition);
+                float distance = GetDistance(neighbour, tilePosition);
 
                 //This node neighbour node has already been checked
                 if (closed.ContainsKey(neighbour))

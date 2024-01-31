@@ -6,20 +6,14 @@ namespace DetectionBehaviour
     [CreateAssetMenu(menuName = "Custom/Pathfinding/Dijkstra")]
     public class Dijkstra : DetectionBehaviour
     {
-        private readonly Queue<PathNode> _open = new Queue<PathNode>();
-        private readonly Dictionary<Transform, PathNode> _openDictionary  = new Dictionary<Transform, PathNode>();
-        private readonly Dictionary<Transform, PathNode> _closed  = new Dictionary<Transform, PathNode>();
+        private readonly Queue<PathNode> _open = new();
+        private readonly Dictionary<Vector2Int, PathNode> _openDictionary = new();
+        private readonly Dictionary<Vector2Int, PathNode> _closed = new();
 
-        private Transform _start;
-        private Transform _goal;
+        private Vector2Int _start;
+        private Vector2Int _goal;
 
-        [SerializeField] private bool colorExploredNodes;
-        [SerializeField] private Color exploredNodesColor  = new Color(214, 93, 177);
-
-
-
-        public override LinkedList<Transform> GetShortestPath(Transform start, Transform end,
-            SphereTransforms sphereTransforms)
+        public override LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end)
         {
             _start = start;
             _goal = end;
@@ -27,17 +21,17 @@ namespace DetectionBehaviour
             _closed.Clear();
             _openDictionary.Clear();
 
-            
+
             return GetPath();
         }
 
-        private LinkedList<Transform> GetPath()
+        private LinkedList<Vector2Int> GetPath()
         {
             RunAlgorithm();
 
-            LinkedList<Transform> bestPath = new LinkedList<Transform>();
+            LinkedList<Vector2Int> bestPath = new LinkedList<Vector2Int>();
 
-            Transform previous = _goal;
+            Vector2Int previous = _goal;
             while (true)
             {
                 PathNode node = _closed[previous];
@@ -63,9 +57,6 @@ namespace DetectionBehaviour
             {
                 MoveToClosed(closestNode);
 
-                if (colorExploredNodes)
-                    closestNode.TilePosition.GetComponent<SpriteRenderer>().color = exploredNodesColor;
-
                 if (closestNode.TilePosition == _goal)
                     break;
 
@@ -86,7 +77,7 @@ namespace DetectionBehaviour
         {
             foreach (var neighbour in GetNeighbours(node.TilePosition))
             {
-                float distance = GetDistance(neighbour.position, node.TilePosition.position);
+                float distance = GetDistance(neighbour, node.TilePosition);
 
                 //This neighbour node has already been checked
                 if (_closed.ContainsKey(neighbour))
@@ -99,7 +90,7 @@ namespace DetectionBehaviour
                     PathNode toAdd = new PathNode(neighbour, (node.DistanceTraveled + distance), node);
                     _open.Enqueue(toAdd);
                     _openDictionary.Add(neighbour, toAdd);
-                    
+
                     continue;
                 }
 
@@ -115,9 +106,6 @@ namespace DetectionBehaviour
         }
 
 
-     
-
-
         private void AddStartNode()
         {
             PathNode startNode = new PathNode(_start, 0, null);
@@ -125,7 +113,5 @@ namespace DetectionBehaviour
             _open.Enqueue(startNode);
             _openDictionary.Add(_start, startNode);
         }
-
-      
     }
 }

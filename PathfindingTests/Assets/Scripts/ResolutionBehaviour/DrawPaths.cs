@@ -9,17 +9,14 @@ namespace ResolutionBehaviour
     public class DrawPaths : ResolutionBehaviour
     {
         
-        public override void Resolve(LinkedList<Transform> path)
+        public override void Resolve(LinkedList<Vector2Int> path)
         {
             Profiler.BeginSample("Resolve", this);
 
-            Transform previous = null;
+            Vector2Int previous = Vector2Int.zero;
             foreach (var transform in path)
             {
-                if (previous != null)
-                {
-                    Detection.Lines.Add(new Tuple<Vector3, Vector3>(previous.position, transform.position));
-                }
+                Detection.Lines.Add(new Tuple<Vector2Int, Vector2Int>(previous, transform));
 
                 previous = transform;
             }

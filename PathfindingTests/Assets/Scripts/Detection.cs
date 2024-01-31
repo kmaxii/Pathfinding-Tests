@@ -11,8 +11,6 @@ public class Detection : MonoBehaviour
     [SerializeField] private ResolutionBehaviour.ResolutionBehaviour resolutionBehaviour;
 
     [Header("Simulation settings")] 
-    [Tooltip("The program will shut down if this is met")]
-    [SerializeField] private int maxSimulationTime = 60;
     [Tooltip("If an algorithm takes more then this time, cancel it for future runs")]
     [SerializeField] private float cancelDurationFactor = 2;
     
@@ -21,18 +19,14 @@ public class Detection : MonoBehaviour
     [Tooltip("The time the time number that is written should be multiplied by to avoid E-... values.")]
     [SerializeField] private float timeMultiplier;
     
-    [Header("Must haves")]
-    [SerializeField] private CircleSpawner circleSpawner;
-    [SerializeField] private SphereTransforms spheres;
-
-    [SerializeField] private Transform startObject;
-    [SerializeField] private Transform endObject;
+    [SerializeField] private Vector2Int startPos = new(1, 1);
+    [SerializeField] private Vector2Int endPos = new(8, 8);
     
     
-    public static readonly HashSet<Tuple<Vector3, Vector3>> Lines = new();
+    public static readonly HashSet<Tuple<Vector2Int, Vector2Int>> Lines = new();
     private readonly HashSet<int> _stoppedAlgorithms = new();
-    private List<float[]> _dataToWrite = new List<float[]>();
-    private readonly List<Color> _gizmoColors = new List<Color>{Color.red, Color.green, Color.yellow};
+    private List<float[]> _dataToWrite = new();
+    [SerializeField] private MapData mapData;
 
     private int _currentUpdate;
 
@@ -51,16 +45,6 @@ public class Detection : MonoBehaviour
     void Update()
     {
         Lines.Clear();
-        
-        foreach (var sph in spheres.AllColliders)
-        {
-            sph.textMeshPro.text = "";
-
-            if (sph.transform != startObject && sph.transform != endObject)
-            {
-                sph.GetComponent<SpriteRenderer>().color = Color.white;
-            }
-        }
         
         if (_stoppedAlgorithms.Count == detectionBehaviour.Count)
             Application.Quit();
@@ -83,8 +67,6 @@ public class Detection : MonoBehaviour
         
         if (_currentUpdate != updatesToAverage)
             return;
-
-        circleSpawner.SpawnCircles();
         
         //Reset variable
         _currentUpdate = 0;
@@ -99,7 +81,7 @@ public class Detection : MonoBehaviour
         Profiler.BeginSample(algorithm.name, this);
         var startTime = Time.realtimeSinceStartup;
             
-        var linkedList = algorithm.GetShortestPath(startObject, endObject, spheres);
+        var linkedList = algorithm.GetShortestPath(startPos, endPos);
         
         resolutionBehaviour.Resolve(linkedList);
 
@@ -113,7 +95,7 @@ public class Detection : MonoBehaviour
 
     private void WriteToFile()
     {
-        List<String> toWrite = new() {spheres.AllColliders.Count.ToString()};
+        List<String> toWrite = new() {mapData.MapSize.ToString()};
         for (var i = 0; i < detectionBehaviour.Count; i++)
         {
             float algorithmTime = 0;
@@ -136,17 +118,15 @@ public class Detection : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        
-        int counter = -1;
         foreach (var line in Lines)
         { 
-            if (Vector3.Distance(line.Item1, startObject.transform.position) < 0.001f)
+            /*if (Vector3.Distance(line.Item1, startPos) < 0.001f)
             {
                 counter++;
                 Gizmos.color = _gizmoColors[counter];
-            }
+            }*/
             
-            Gizmos.DrawLine(line.Item1, line.Item2);
+            Gizmos.DrawLine(new Vector3(line.Item1.x, line.Item1.y), new Vector3(line.Item2.x, line.Item2.y));
         }
     }
 }

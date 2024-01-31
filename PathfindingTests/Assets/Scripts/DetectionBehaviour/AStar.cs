@@ -1,53 +1,37 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace DetectionBehaviour
 {
-    
     [CreateAssetMenu(menuName = "Custom/Pathfinding/Astar")]
     public class AStar : DetectionBehaviour
     {
         private readonly List<PathNode> _open = new List<PathNode>();
-        private readonly Dictionary<Transform, PathNode> _openDictionary = new Dictionary<Transform, PathNode>();
-        private readonly Dictionary<Transform, PathNode> _closed  = new Dictionary<Transform, PathNode>();
+        private readonly Dictionary<Vector2Int, PathNode> _openDictionary = new();
+        private readonly Dictionary<Vector2Int, PathNode> _closed = new();
 
-        private Transform _start;
-        private Transform _goal;
-        private SphereTransforms _sphereTransforms;
+        private Vector2Int _start;
+        private Vector2Int _goal;
 
-        [Header("Neighbours")]
-        [SerializeField] private bool colorNeighbours;
-        [SerializeField] private Color neighbourColor = Color.yellow;
-        
-        [Header("Text")]
-        [SerializeField] private bool showText;
-        
-        [Header("Searched nodes")]
-        [SerializeField] private bool colorSearchedNodes;
-        [SerializeField] private Color searchedNodesColor = Color.red;
-
-
-        public override LinkedList<Transform> GetShortestPath(Transform start, Transform end, SphereTransforms sphereTransforms)
+        public override LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end)
         {
             _start = start;
             _goal = end;
             _open.Clear();
             _closed.Clear();
             _openDictionary.Clear();
-            _sphereTransforms = sphereTransforms;
 
-            
+
             return GetPath();
         }
 
-        private LinkedList<Transform> GetPath()
+        private LinkedList<Vector2Int> GetPath()
         {
             RunAlgorithm();
 
-            LinkedList<Transform> bestPath = new LinkedList<Transform>();
+            LinkedList<Vector2Int> bestPath = new LinkedList<Vector2Int>();
 
-            Transform previous = _goal;
+            Vector2Int previous = _goal;
             while (true)
             {
                 PathNode node = _closed[previous];
@@ -57,6 +41,7 @@ namespace DetectionBehaviour
                 {
                     break;
                 }
+
                 previous = node.Previous.TilePosition;
             }
 
@@ -72,9 +57,6 @@ namespace DetectionBehaviour
             {
                 PathNode bestNode = GetBestNode();
                 MoveToClosed(bestNode);
-                if (colorSearchedNodes)
-                    bestNode.TilePosition.GetComponent<SpriteRenderer>().color = searchedNodesColor;
-
 
                 if (bestNode.TilePosition == _goal)
                     break;
@@ -82,7 +64,7 @@ namespace DetectionBehaviour
                 CheckNeighbours(bestNode);
             }
         }
-        
+
         private PathNode GetBestNode()
         {
             PathNode bestNode = _open[0];
@@ -93,7 +75,7 @@ namespace DetectionBehaviour
                     bestNode = _open[i];
                 }
             }
-            
+
             return bestNode;
         }
 
@@ -103,26 +85,23 @@ namespace DetectionBehaviour
             _open.Remove(node);
             _openDictionary.Remove(node.TilePosition);
             _closed.Add(node.TilePosition, node);
-
         }
+
         private void CheckNeighbours(PathNode node)
         {
-
             foreach (var neighbour in GetNeighbours(node.TilePosition))
             {
-                float distance = GetDistance(neighbour.position, node.TilePosition.position);
+                float distance = GetDistance(neighbour, node.TilePosition);
 
                 //This node neighbour node has already been checked
-                if (_closed.ContainsKey(neighbour))
+                if (_closed.TryGetValue(neighbour, out var closedNeighbour))
                 {
-                    PathNode closedNeighbour = _closed[neighbour];
-
                     //If this way to the node is faster then the current recorded one
                     if (node.DistanceTraveled + distance < closedNeighbour.DistanceTraveled)
                     {
                         closedNeighbour.DistanceTraveled = node.DistanceTraveled + distance;
                         closedNeighbour.Previous = node;
-                        
+
                         MoveFromClosedToOpen(closedNeighbour);
                     }
 
@@ -132,27 +111,12 @@ namespace DetectionBehaviour
                 if (!_openDictionary.ContainsKey(neighbour))
                 {
                     PathNode toAdd = new PathNode(
-                        neighbour, 
-                        node.DistanceTraveled + distance, 
+                        neighbour,
+                        node.DistanceTraveled + distance,
                         GetHeuristic(neighbour), node);
                     _open.Add(toAdd);
                     _openDictionary.Add(neighbour, toAdd);
-                    
-                    if (colorNeighbours)
-                        neighbour.GetComponent<SpriteRenderer>().color = neighbourColor;
 
-                    if (showText)
-                    {
-                        foreach (var sphere1 in _sphereTransforms.AllColliders.Where(sphere =>
-                            sphere.transform == neighbour))
-                        {
-                            if (sphere1.textMeshPro.text == "")
-                            {
-                                sphere1.textMeshPro.text =
-                                    $"G: {toAdd.DistanceTraveled}, H: {GetHeuristic(neighbour)}, F: {toAdd.EstimatedCost}";
-                            }
-                        }
-                    }
                     continue;
                 }
 
@@ -165,10 +129,7 @@ namespace DetectionBehaviour
                     neighbourNode.Previous = node;
                 }
             }
-
         }
-        
-        
 
 
         private void MoveFromClosedToOpen(PathNode node)
@@ -177,7 +138,7 @@ namespace DetectionBehaviour
             _open.Add(node);
             _openDictionary.Add(node.TilePosition, node);
         }
-        
+
 
         private void AddStartNode()
         {
@@ -186,18 +147,10 @@ namespace DetectionBehaviour
             _open.Add(startNode);
             _openDictionary.Add(_start, startNode);
         }
-        
 
-
-
-        
-
-        
-        private float GetHeuristic(Transform position)
+        private float GetHeuristic(Vector2Int position)
         {
-             return GetDistance(_goal.position, position.position);
+            return GetDistance(_goal, position);
         }
-
-
     }
 }

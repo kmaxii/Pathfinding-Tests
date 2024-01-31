@@ -6,6 +6,6 @@ namespace ResolutionBehaviour
 {
     public abstract class ResolutionBehaviour : ScriptableObject
     {
-        public abstract void Resolve(LinkedList<Transform> path);
+        public abstract void Resolve(LinkedList<Vector2Int> path);
     }
 }
