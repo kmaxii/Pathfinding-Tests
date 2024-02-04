@@ -2,44 +2,46 @@ using System.Collections.Generic;
 using MaxisGeneralPurpose.Scriptable_objects;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Tilemaps;
 
 namespace Visualization
 {
     public class GridVisualizer : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer baseTilePrefab;
-        [SerializeField] private Color[] colorSpace;
-
+        [Header("TileMap Stuff")] 
+        [SerializeField] private Tile _walkableTile;
+        [SerializeField] private Tile _obstacleTile;
+        [SerializeField] private Tile _correctRouteTile;
+        [SerializeField] private Tilemap _tilemap;
+        
+        [Header("Scriptable Objects")]
         [FormerlySerializedAs("mapDataSO")] [SerializeField]
         private MapData mapDataSo;
 
-        [SerializeField] [Range(1, 1000)] private int gridSize;
-        [SerializeField] [Range(1, 100)] private int obsRate;
+        [Header("Sizes and Variables")]
+        [SerializeField] [Range(1, 1000)] private int _gridSize;
+        [SerializeField] [Range(0, 100)] private int _obsRate;
 
-        [SerializeField] private GameEventWithVector2Int changeToRed;
+        [Header("Events")]
+        [SerializeField] private GameEventWithVector2Int _changeToRed;
 
-        private void OnEnable()
-        {
-            changeToRed.RegisterListener(ChangeToRed);
+        private void OnEnable() {
+            _changeToRed.RegisterListener(ChangeToCorrectPath);
         }
 
-        private void OnDisable()
-        {
-            changeToRed.UnregisterListener(ChangeToRed);
+        private void OnDisable() {
+            _changeToRed.UnregisterListener(ChangeToCorrectPath);
         }
-
-        private void ChangeToRed(Vector2Int pos)
-        {
-            ChangeColorOnPosition(pos, Color.red);
+        private void ChangeToCorrectPath(Vector2Int pos) {
+            Vector3Int newPos = new Vector3Int(pos.x, pos.y, 0);
+            _tilemap.SetTile(newPos, _correctRouteTile);
         }
 
 
         private Dictionary<Vector2Int, SpriteRenderer> tileMap;
 
-        public void Awake()
-        {
-            tileMap = new();
-            mapDataSo.SetMap(gridSize, obsRate);
+        public void Awake() {
+            mapDataSo.SetMap(_gridSize, _obsRate);
             VisualizeGrid();
         }
 
@@ -52,30 +54,20 @@ namespace Visualization
                 {
                     if (mapDataSo.map[i, j])
                     {
-                        SpawnTileAndChangeColor(new Vector2Int(i, j), colorSpace[0]);
+                        //SpawnTileAndChangeColor(new Vector2Int(i, j), _colorSpace[0]);
+                        SetTileOnTilemap(new Vector3Int(i, j, 0), _walkableTile);
                     }
                     else
                     {
-                        SpawnTileAndChangeColor(new Vector2Int(i, j), colorSpace[1]);
+                        //SpawnTileAndChangeColor(new Vector2Int(i, j), _colorSpace[1]);
+                        SetTileOnTilemap(new Vector3Int(i, j, 0), _obstacleTile);
                     }
                 }
             }
         }
 
-        private void SpawnTileAndChangeColor(Vector2Int pos, Color color)
-        {
-            Vector3 tilePos = new Vector3(pos.x, pos.y, 0);
-            var temp = Instantiate(baseTilePrefab, tilePos, Quaternion.identity, transform);
-            //  Add the spriterenderer of this object as a value to tileMap and the position should be the key
-            temp.transform.name = $"{tilePos}";
-            temp.color = color;
-            tileMap.Add(pos, temp);
-        }
-
-        private void ChangeColorOnPosition(Vector2Int pos, Color color)
-        {
-            // change the color of the tile in tileMap on the correct position.
-            tileMap[pos].color = color;
+        private void SetTileOnTilemap(Vector3Int pos, Tile tile) {
+            _tilemap.SetTile(pos, tile);
         }
     }
 }

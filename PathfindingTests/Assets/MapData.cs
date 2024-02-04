@@ -41,10 +41,10 @@ public class MapData : ScriptableObject
     }
 
     // Start is called before the first frame update
-    void Awake()
+    /*void Awake()
     {
         SetMap(10, 10);
-    }
+    }*/
 
 
     public override string ToString()
