@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace DetectionBehaviour
 {
+    [CreateAssetMenu(menuName = "Custom/Pathfinding/Dijkstra")]
+
     public class Dijkstra : DetectionBehaviour
     {
         public override LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end)

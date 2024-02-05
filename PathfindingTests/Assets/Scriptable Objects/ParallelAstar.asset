@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a92640497b3c4c178668ae3e786314d4, type: 3}
-  m_Name: BiDirDijkstra
+  m_Script: {fileID: 11500000, guid: 2f33f6cfb31f47138c71be931190e00e, type: 3}
+  m_Name: ParallelAstar
   m_EditorClassIdentifier: 
-  mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
+  mapData: {fileID: 0}

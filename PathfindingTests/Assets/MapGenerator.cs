@@ -5,7 +5,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private MapData mapData;
 
 
-    public int seed = 0;
+    public int seed;
 
 
     public float frequency = 5.0f;
