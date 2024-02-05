@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using MaxisGeneralPurpose.Scriptable_objects;
-using ProceduralNoiseProject;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -28,7 +27,7 @@ public class MapData : ScriptableObject
 
 
     //Method to set the map to x size and percent chance for each to be false
-    public void SetMap(int width, Noise noise) {
+    public void SetMap(int width, float frequency, int seed) {
         //  Measure the time for this function to run
         Stopwatch functionTimer = new Stopwatch();
         functionTimer.Start();
@@ -36,11 +35,8 @@ public class MapData : ScriptableObject
         map = new bool[width, width];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < width; y++) {
-                float val = noise.Sample2D(x, y);
-
-                //     float perlinValue = Mathf.PerlinNoise(x / noiseScale, y / noiseScale);
-                // This is a simplified logic; you'd adjust your thresholds based on your desired map features
-                map[x, y] = val < 0.5f; // Adjust this logic for walkable vs. solid areas
+                float val = Mathf.PerlinNoise(seed + x / frequency, seed +y / frequency);
+                map[x, y] = val < 0.5f;
             }
         }
 
@@ -55,6 +51,14 @@ public class MapData : ScriptableObject
         functionTimer.Stop();
         Debug.Log("Map generation time: " + functionTimer.Elapsed.TotalSeconds);
         setMap.Raise();
+    }
+    
+    private float PerlinNoiseWithSeed(float x, float y, int seed, float frequency)
+    {
+        float newX = (x + seed * 1000) * frequency;
+        float newY = (y + seed * 1000) * frequency;
+
+        return Mathf.PerlinNoise(newX, newY);
     }
 
     void EnsureConnectivity() {
