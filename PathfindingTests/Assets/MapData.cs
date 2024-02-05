@@ -40,7 +40,7 @@ public class MapData : ScriptableObject
                 
            //     float perlinValue = Mathf.PerlinNoise(x / noiseScale, y / noiseScale);
                 // This is a simplified logic; you'd adjust your thresholds based on your desired map features
-                map[x, y] = val > 0.5f; // Adjust this logic for walkable vs. solid areas
+                map[x, y] = val < 0.5f; // Adjust this logic for walkable vs. solid areas
             }
         }
         

@@ -497,8 +497,8 @@ MonoBehaviour:
   noiseType: 0
   seed: 0
   frequency: 5
-  jitter: 1
-  width: 74
+  jitter: 2
+  width: 300
 --- !u!4 &1776321783
 Transform:
   m_ObjectHideFlags: 0
