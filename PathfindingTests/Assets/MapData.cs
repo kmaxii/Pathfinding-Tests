@@ -131,7 +131,7 @@ public class MapData : ScriptableObject
                 {
                     foreach (var pointB in regions[j])
                     {
-                        float distance = Vector2Int.Distance(pointA, pointB);
+                        float distance = Distance(pointA, pointB);
                         if (distance < closestDistance)
                         {
                             closestDistance = distance;
@@ -245,5 +245,12 @@ public class MapData : ScriptableObject
         }
 
         return mapString;
+    }
+    
+    private  static float Distance(Vector2Int a, Vector2Int b)
+    {
+        float num1 = (float) (a.x - b.x);
+        float num2 = (float) (a.y - b.y);
+        return num1 * num1 + num2 * num2;
     }
 }

@@ -475,7 +475,7 @@ GameObject:
   - component: {fileID: 1776321783}
   - component: {fileID: 1776321782}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: MapGeneretator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -498,7 +498,7 @@ MonoBehaviour:
   seed: 0
   frequency: 5
   jitter: 2
-  width: 300
+  width: 500
 --- !u!4 &1776321783
 Transform:
   m_ObjectHideFlags: 0
