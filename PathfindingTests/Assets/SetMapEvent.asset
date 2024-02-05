@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8def9652459fb814986bc1f2e58c13b0, type: 3}
-  m_Name: MapData
+  m_Script: {fileID: 11500000, guid: adc0d76a29e51da47bd7f76e7d6c7251, type: 3}
+  m_Name: SetMapEvent
   m_EditorClassIdentifier: 
-  setMap: {fileID: 11400000, guid: 39dbfca691eef28498de6d542cced094, type: 2}
-  ensureConnectivity: 1
