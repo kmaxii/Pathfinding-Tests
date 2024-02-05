@@ -30,7 +30,8 @@ namespace DetectionBehaviour
 
         protected float GetDistance(Vector2Int first, Vector2Int second)
         {
-            return Mathf.Sqrt(GetDistanceSquared(first, second));
+            return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y);
+          //  return Mathf.Sqrt(GetDistanceSquared(first, second));
             
             /*float num1 = first.x - second.x;
             float num2 = first.y - second.y;

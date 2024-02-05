@@ -5,62 +5,62 @@ namespace DetectionBehaviour
 {
     [CreateAssetMenu(menuName = "Custom/Pathfinding/Astar")]
     public class AStar : DetectionBehaviour
-    {
-        
-        public bool useHeuristic = true;
-
+    {        
         public override LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end)
         {
-            var openSet = new PriorityQueue<Vector2Int, float>();
             var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
+            var costSoFar = new Dictionary<Vector2Int, float>();
+            var frontier = new PriorityQueue<Vector2Int, float>();
+            frontier.Enqueue(start, 0);
 
-            var gScore = new Dictionary<Vector2Int, float> { [start] = 0 };
-            var fScore = new Dictionary<Vector2Int, float> { [start] = useHeuristic ? GetHeuristic(start, end) : 0 };
+            cameFrom[start] = start;
+            costSoFar[start] = 0;
 
-            openSet.Enqueue(start, fScore[start]);
-
-            while (openSet.Count > 0)
+            while (frontier.Count > 0)
             {
-                var current = openSet.Dequeue();
+                var current = frontier.Dequeue();
 
                 if (current.Equals(end))
-                    return ReconstructPath(cameFrom, current);
+                    break;
 
-                foreach (var neighbour in GetNeighbours(current))
+                foreach (var next in GetNeighbours(current))
                 {
-                    var tentativeGScore = gScore[current] + GetDistance(current, neighbour);
-                    var tentativeFScore = tentativeGScore + (useHeuristic ? GetHeuristic(neighbour, end) : 0);
-
-                    if (gScore.ContainsKey(neighbour) && !(tentativeGScore < gScore[neighbour])) continue;
-                    cameFrom[neighbour] = current;
-                    gScore[neighbour] = tentativeGScore;
-                    fScore[neighbour] = tentativeFScore;
-
-                    if (!openSet.Contains(neighbour))
-                        openSet.Enqueue(neighbour, fScore[neighbour]);
+                    float newCost = costSoFar[current] + GetDistance(current, next);
+                    if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                    {
+                        costSoFar[next] = newCost;
+                        float priority = newCost + Heuristic(end, next);
+                        frontier.Enqueue(next, priority);
+                        cameFrom[next] = current;
+                    }
                 }
             }
 
-            return new LinkedList<Vector2Int>();
-        }
-
-        private LinkedList<Vector2Int> ReconstructPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int current)
-        {
-            var totalPath = new LinkedList<Vector2Int>();
-            totalPath.AddFirst(current);
-
-            while (cameFrom.ContainsKey(current))
-            {
-                current = cameFrom[current];
-                totalPath.AddFirst(current);
-            }
-
-            return totalPath;
+            return BuildPath(cameFrom, start, end);
         }
         
-        private float GetHeuristic(Vector2Int position, Vector2Int target)
+        private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start, Vector2Int end)
         {
-            return  GetDistance(position, target);
+            var path = new LinkedList<Vector2Int>();
+            var current = end;
+
+            if (!cameFrom.ContainsKey(current))
+                return path; // No path exists
+
+            while (!current.Equals(start))
+            {
+                path.AddFirst(current);
+                current = cameFrom[current];
+            }
+            path.AddFirst(start); // Optionally add the start node
+
+            return path;
+        }
+        
+        private float Heuristic(Vector2Int a, Vector2Int b)
+        {
+            // Manhattan distance
+            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
         }
     }
 }

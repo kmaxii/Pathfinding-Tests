@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace DetectionBehaviour
 {
-    public class PathNode
+    public class PathNode  : IComparable<PathNode>
     {
 
         public readonly Vector2Int TilePosition;
@@ -25,6 +26,12 @@ namespace DetectionBehaviour
             TilePosition = tilePosition;
             DistanceTraveled = distanceTraveled;
             Previous = previous;
+        }
+        
+        public int CompareTo(PathNode other)
+        {
+            if (other == null) return 1;
+            return DistanceTraveled.CompareTo(other.DistanceTraveled);
         }
     }
 }

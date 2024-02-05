@@ -1,40 +1,27 @@
-﻿using System;
+﻿// PriorityQueue implementation (not part of Unity, needs to be defined)
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DetectionBehaviour
 {
-    // Priority Queue implementation (if needed)
-    public class PriorityQueue<TElement, TPriority> where TElement : notnull
+    public class PriorityQueue<TElement, TPriority> where TPriority : IComparable<TPriority>
     {
-        private SortedDictionary<TPriority, Queue<TElement>> elements = new SortedDictionary<TPriority, Queue<TElement>>();
+        private List<KeyValuePair<TElement, TPriority>> elements = new();
 
-        public void Enqueue(TElement item, TPriority priority)
+        public int Count => elements.Count;
+
+        public void Enqueue(TElement element, TPriority priority)
         {
-            if (!elements.ContainsKey(priority))
-                elements[priority] = new Queue<TElement>();
-
-            elements[priority].Enqueue(item);
+            elements.Add(new KeyValuePair<TElement, TPriority>(element, priority));
+            elements.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
         }
 
         public TElement Dequeue()
         {
-            if (elements.Count == 0)
-                throw new InvalidOperationException("The queue is empty");
-
-            var firstPair = elements.First();
-            var item = firstPair.Value.Dequeue();
-            if (firstPair.Value.Count == 0)
-                elements.Remove(firstPair.Key);
-
-            return item;
+            var bestItem = elements[0].Key;
+            elements.RemoveAt(0);
+            return bestItem;
         }
-
-        public bool Contains(TElement item)
-        {
-            return elements.Any(pair => pair.Value.Contains(item));
-        }
-
-        public int Count => elements.Sum(pair => pair.Value.Count);
     }
 }
