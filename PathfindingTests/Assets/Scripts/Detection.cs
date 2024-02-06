@@ -23,7 +23,8 @@ public class Detection : MonoBehaviour
 
     public static readonly HashSet<Tuple<Vector2Int, Vector2Int>> Lines = new();
     private readonly HashSet<int> _stoppedAlgorithms = new();
-    private List<float[]> _dataToWrite = new();
+    private List<List<float[]>> _dataToWrite = new();
+    private List<float[]> _algoTimes = new();
     private List<float[]> _nodesExploredToWrite = new();
     [SerializeField] private MapData mapData;
 
@@ -35,18 +36,30 @@ public class Detection : MonoBehaviour
         List<string> headers = new List<string> { "MapSize" };
         foreach (var behaviour in detectionBehaviours)
         {
-            headers.Add(behaviour.name + "Time");
-            headers.Add(behaviour.name + "ExploredNodes");
+            headers.Add(behaviour.name + "_Time");
+            headers.Add(behaviour.name + "_ExploredNodes");
+            headers.Add(behaviour.name + "_PathLength");
         }
         EnhancedCsvFileWriter.Initialize("DetectionData.csv", headers);
 
-        _dataToWrite = new List<float[]>();
+        _algoTimes = new List<float[]>();
         _nodesExploredToWrite = new List<float[]>();
-        for (int i = 0; i < updatesToAverage; i++)
+        for (int i = 0; i < 3; i++)
         {
-            _dataToWrite.Add(new float[detectionBehaviours.Count]);
+            _dataToWrite.Add(new List<float[]>());
+            for (int j = 0; j < updatesToAverage; j++)
+            {
+                _dataToWrite[i].Add(new float[detectionBehaviours.Count]);
+      
+            }
+        }
+        
+        for (int j = 0; j < updatesToAverage; j++)
+        {
+            _algoTimes.Add(new float[detectionBehaviours.Count]);
             _nodesExploredToWrite.Add(new float[detectionBehaviours.Count]);
         }
+
     }
 
     void Update()
@@ -91,8 +104,10 @@ public class Detection : MonoBehaviour
 
         resolutionBehaviour.Resolve(algoResult.Item1);
         
-
-        _dataToWrite[_currentUpdate][i] = algorithmTime;
+        _dataToWrite[0][_currentUpdate][i] = algorithmTime;
+        _dataToWrite[1][_currentUpdate][i] = algoResult.nodesExplored;
+        _dataToWrite[2][_currentUpdate][i] = algoResult.Item1.Count;
+        _algoTimes[_currentUpdate][i] = algorithmTime;
         _nodesExploredToWrite[_currentUpdate][i] = algoResult.nodesExplored;
     }
 
@@ -103,24 +118,32 @@ public class Detection : MonoBehaviour
         {
             float algorithmTime = 0;
             float nodesExplored = 0;
-            foreach (var floats in _dataToWrite)
+            float pathLength = 0;
+            foreach (var floats in _dataToWrite[0])
             {
                 algorithmTime += floats[i];
             }
 
-            foreach (var num in _nodesExploredToWrite)
+            foreach (var num in _dataToWrite[1])
             {
                 nodesExplored += num[i];
             }
             
-            algorithmTime /= _dataToWrite.Count;
-            nodesExplored /= _nodesExploredToWrite.Count;
+            foreach (var num in _dataToWrite[2])
+            {
+                pathLength += num[i];
+            }
+            
+            algorithmTime /= _dataToWrite[0].Count;
+            nodesExplored /= _dataToWrite[1].Count;
+            pathLength /= _dataToWrite[2].Count;
 
             if (algorithmTime > cancelDurationFactor)
                 _stoppedAlgorithms.Add(i);
 
             toWrite.Add((algorithmTime * timeMultiplier).ToString(CultureInfo.InvariantCulture));
             toWrite.Add(nodesExplored.ToString(CultureInfo.InvariantCulture));
+            toWrite.Add(pathLength.ToString(CultureInfo.InvariantCulture));
         }
 
         // Use the EnhancedCsvFileWriter to add a row

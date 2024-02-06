@@ -9,7 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e8c53cc27646faa73f08a4543c9146, type: 3}
-  m_Name: Astar
+  m_Script: {fileID: 11500000, guid: 45b84de3a34e4673a545eef7c14aa0df, type: 3}
+  m_Name: Dijkstra
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
+  visualize: 0
+  color1: {fileID: 11400000, guid: 0ab88c5cdaa731d4ba48b5d0c47f2da3, type: 2}
+  color2: {fileID: 0}
+  color3: {fileID: 0}

@@ -38,6 +38,12 @@ namespace DetectionBehaviour
                 {
                     explored++;
                     var currentStart = frontierStart.Dequeue();
+
+                    if (visualize)
+                    {
+                        color1.Raise(currentStart);
+                    }
+                    
                     if (cameFromEnd.ContainsKey(currentStart))
                     {
                         meetNode = currentStart;
@@ -48,7 +54,13 @@ namespace DetectionBehaviour
 
                 // Backward search step
                 if (frontierEnd.Count <= 0) continue;
+                explored++;
                 var currentEnd = frontierEnd.Dequeue();
+                if (visualize)
+                {
+                    color2.Raise(currentEnd);
+                }
+                
                 if (cameFromStart.ContainsKey(currentEnd))
                 {
                     meetNode = currentEnd;

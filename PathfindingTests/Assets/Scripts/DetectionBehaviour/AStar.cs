@@ -21,6 +21,10 @@ namespace DetectionBehaviour
             {
                 explored++;
                 var current = frontier.Dequeue();
+                if (visualize)
+                {
+                    color1.Raise(current);
+                }
 
                 if (current.Equals(end))
                     break;
@@ -31,7 +35,7 @@ namespace DetectionBehaviour
                     if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                     {
                         costSoFar[next] = newCost;
-                        float priority = newCost + Heuristic(end, next);
+                        float priority = newCost + GetDistance(end, next);
                         frontier.Enqueue(next, priority);
                         cameFrom[next] = current;
                     }
@@ -41,7 +45,8 @@ namespace DetectionBehaviour
             return (BuildPath(cameFrom, start, end), explored);
         }
         
-        private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start, Vector2Int end)
+        private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start,
+            Vector2Int end)
         {
             var path = new LinkedList<Vector2Int>();
             var current = end;
@@ -54,15 +59,10 @@ namespace DetectionBehaviour
                 path.AddFirst(current);
                 current = cameFrom[current];
             }
+
             path.AddFirst(start); // Optionally add the start node
 
             return path;
-        }
-        
-        private float Heuristic(Vector2Int a, Vector2Int b)
-        {
-            // Manhattan distance
-            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
         }
     }
 }

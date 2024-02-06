@@ -21,9 +21,12 @@ namespace DetectionBehaviour
 
             while (frontier.Count > 0)
             {
-                var current = frontier.Dequeue();
-
                 explored++;
+                var current = frontier.Dequeue();
+                if (visualize)
+                {
+                    color1.Raise(current);
+                }
                 
                 if (current.Equals(end))
                     break;
