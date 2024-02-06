@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
+using Visualization;
+using Random = UnityEngine.Random;
 
 public class Detection : MonoBehaviour
 {
     [Header("Algorithms")]
     [SerializeField] private List<DetectionBehaviour.DetectionBehaviour> detectionBehaviours;
     [SerializeField] private ResolutionBehaviour.ResolutionBehaviour resolutionBehaviour;
-
+    [SerializeField] private GridVisualizer gridVisual;
+    
     [Header("Simulation settings")]
     [Tooltip("If an algorithm takes more than this time, cancel it for future runs")]
     [SerializeField] private float cancelDurationFactor = 2;
@@ -19,16 +22,15 @@ public class Detection : MonoBehaviour
     [Tooltip("The time the number that is written should be multiplied by to avoid E-... values.")]
     [SerializeField] private float timeMultiplier;
 
-    [SerializeField] private Vector2Int startPos = new(1, 1);
-    [SerializeField] private Vector2Int endPos = new(8, 8);
-
     public static readonly HashSet<Tuple<Vector2Int, Vector2Int>> Lines = new();
     private readonly HashSet<int> _stoppedAlgorithms = new();
     private List<List<float[]>> _dataToWrite = new();
+    
 
     [SerializeField] private MapData mapData;
 
     private int _currentUpdate;
+    private int totalRuns;
 
     private void Start()
     {
@@ -58,7 +60,36 @@ public class Detection : MonoBehaviour
         if (_stoppedAlgorithms.Count == detectionBehaviours.Count)
             Application.Quit();
 
+        
+        
+        //  Set random start and end positions
+        SetRandomStartAndEndPos();
+        
+        //  Reset the grid
+        gridVisual.ResetGrid();
+        
+        //  Visualize The grid
+        gridVisual.VisualizeGrid();
+        
+        //  Run the algorithms
         RunAlgorithms();
+        
+        
+        //  Update run amount for debugs
+        totalRuns++;
+        Debug.Log("CurrentUpdate!");
+    }
+
+    private void SetRandomStartAndEndPos() {
+        do {
+            mapData.startPos = new Vector2Int(Random.Range(0, mapData.map.GetLength(0)),
+                Random.Range(0, mapData.map.GetLength(1)));
+        } while (!mapData.CheckCoordinate(mapData.startPos.x, mapData.startPos.y));
+
+        do {
+            mapData.endPos = new Vector2Int(Random.Range(0, mapData.map.GetLength(0)),
+                Random.Range(0, mapData.map.GetLength(1)));
+        } while (!mapData.CheckCoordinate(mapData.endPos.x, mapData.endPos.y));
     }
 
     private void RunAlgorithms()
@@ -71,8 +102,10 @@ public class Detection : MonoBehaviour
             }
 
             RunDetectionAlgorithm(i);
+            
         }
         _currentUpdate++;
+        
 
         if (_currentUpdate != updatesToAverage)
             return;
@@ -88,7 +121,7 @@ public class Detection : MonoBehaviour
         var algorithm = detectionBehaviours[i];
         var startTime = Time.realtimeSinceStartup;
 
-        var algoResult = algorithm.GetShortestPath(startPos, endPos);
+        var algoResult = algorithm.GetShortestPath(mapData.startPos, mapData.endPos);
         var algorithmTime = Time.realtimeSinceStartup - startTime;
 
         resolutionBehaviour.Resolve(algoResult.Item1);
@@ -96,7 +129,6 @@ public class Detection : MonoBehaviour
         _dataToWrite[0][_currentUpdate][i] = algorithmTime;
         _dataToWrite[1][_currentUpdate][i] = algoResult.nodesExplored;
         _dataToWrite[2][_currentUpdate][i] = algoResult.Item1.Count;
-
     }
 
     private void WriteToFile()

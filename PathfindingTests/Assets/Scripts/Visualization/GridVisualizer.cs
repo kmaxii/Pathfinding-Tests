@@ -19,6 +19,7 @@ namespace Visualization
 
         [SerializeField] private Tile _obstacleTile;
         [SerializeField] private Tile _correctRouteTile;
+        [SerializeField] private Tile _startEndTile;
         [SerializeField] private Tilemap _tilemap;
 
         [Header("Scriptable Objects")] [FormerlySerializedAs("mapDataSO")] [SerializeField]
@@ -71,7 +72,6 @@ namespace Visualization
             //  debug.log the measured time
             functionTimer.Stop();
             Debug.Log("Map visualization time: " + functionTimer.Elapsed.TotalSeconds);
-            
         }
 
         public void VisualizeGrid() {
@@ -88,6 +88,13 @@ namespace Visualization
                     }
                 }
             }
+            SetTileOnTilemap(new Vector3Int(mapDataSo.startPos.x, mapDataSo.startPos.y, 0), _startEndTile);
+            SetTileOnTilemap(new Vector3Int(mapDataSo.endPos.x, mapDataSo.endPos.y, 0), _startEndTile);
+        }
+
+        public void ResetGrid() {
+            //  reset the grid to its default state
+            _tilemap.ClearAllTiles();
         }
 
         private void SetTileOnTilemap(Vector3Int pos, Tile tile) {

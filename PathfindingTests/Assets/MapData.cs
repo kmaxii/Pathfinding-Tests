@@ -14,6 +14,9 @@ public class MapData : ScriptableObject
     [SerializeField] private bool ensureConnectivity;
 
     [SerializeReference] private GameEventWithVector2Int color;
+    
+    [HideInInspector] public Vector2Int startPos;
+    [HideInInspector] public Vector2Int endPos;
 
     private int _width;
 
