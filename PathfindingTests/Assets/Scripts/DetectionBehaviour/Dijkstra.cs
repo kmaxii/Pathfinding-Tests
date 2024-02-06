@@ -5,7 +5,6 @@ using UnityEngine;
 namespace DetectionBehaviour
 {
     [CreateAssetMenu(menuName = "Custom/Pathfinding/Dijkstra")]
-
     public class Dijkstra : DetectionBehaviour
     {
         public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end)
@@ -15,7 +14,6 @@ namespace DetectionBehaviour
             var frontier = new SimplePriorityQueue <Vector2Int>();
             frontier.Enqueue(start, 0);
             int explored = 0;
-
 
             cameFrom[start] = start;
             costSoFar[start] = 0;

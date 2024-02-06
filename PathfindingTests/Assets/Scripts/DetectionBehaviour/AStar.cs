@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Priority_Queue;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ namespace DetectionBehaviour
         {
             var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
             var costSoFar = new Dictionary<Vector2Int, float>();
-            var frontier  = new SimplePriorityQueue <Vector2Int>();
+            var frontier = new SimplePriorityQueue <Vector2Int>();
             frontier.Enqueue(start, 0);
             int explored = 0;
 
@@ -34,13 +33,11 @@ namespace DetectionBehaviour
                 foreach (var next in GetNeighbours(current))
                 {
                     float newCost = costSoFar[current] + GetDistance(current, next);
-                    if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
-                    {
-                        costSoFar[next] = newCost;
-                        float priority = newCost + GetDistance(end, next);
-                        frontier.EnqueueWithoutDuplicates(next, priority);
-                        cameFrom[next] = current;
-                    }
+                    if (costSoFar.ContainsKey(next) && !(newCost < costSoFar[next])) continue;
+                    costSoFar[next] = newCost;
+                    float priority = newCost + GetDistance(end, next);
+                    frontier.EnqueueWithoutDuplicates(next, priority);
+                    cameFrom[next] = current;
                 }
             }
 
