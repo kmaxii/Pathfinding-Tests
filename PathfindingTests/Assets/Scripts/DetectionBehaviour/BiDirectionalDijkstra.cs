@@ -25,7 +25,7 @@ namespace DetectionBehaviour
             frontierEnd.Enqueue(end, 0);
             cameFromEnd[end] = end;
             costSoFarEnd[end] = 0;
-
+            
             // Meet node
             Vector2Int? meetNode = null;
             
@@ -43,25 +43,21 @@ namespace DetectionBehaviour
                         meetNode = currentStart;
                         break;
                     }
-
                     ExploreNeighbours(currentStart, end, cameFromStart, costSoFarStart, frontierStart);
                 }
 
                 // Backward search step
                 if (frontierEnd.Count <= 0) continue;
-                explored++;
                 var currentEnd = frontierEnd.Dequeue();
                 if (cameFromStart.ContainsKey(currentEnd))
                 {
                     meetNode = currentEnd;
                     break;
                 }
-
                 ExploreNeighbours(currentEnd, start, cameFromEnd, costSoFarEnd, frontierEnd);
             }
-
-            return meetNode == null ? (new LinkedList<Vector2Int>(), 0) : // No path found
-                (BuildPath(cameFromStart, cameFromEnd, start, end, meetNode.Value), explored);
+            
+            return meetNode == null ? (new LinkedList<Vector2Int>(), explored) : (BuildPath(cameFromStart, cameFromEnd, start, end, meetNode.Value), explored);
         }
 
         private void ExploreNeighbours(Vector2Int current, Vector2Int target,
@@ -81,8 +77,7 @@ namespace DetectionBehaviour
             }
         }
 
-        private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFromStart,
-            Dictionary<Vector2Int, Vector2Int> cameFromEnd, Vector2Int start, Vector2Int end, Vector2Int meetNode)
+        private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFromStart, Dictionary<Vector2Int, Vector2Int> cameFromEnd, Vector2Int start, Vector2Int end, Vector2Int meetNode)
         {
             var pathStart = BuildHalfPath(cameFromStart, start, meetNode);
             var pathEnd = BuildHalfPath(cameFromEnd, end, meetNode);
@@ -92,8 +87,7 @@ namespace DetectionBehaviour
             return path;
         }
 
-        private LinkedList<Vector2Int> BuildHalfPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start,
-            Vector2Int meetNode)
+        private LinkedList<Vector2Int> BuildHalfPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start, Vector2Int meetNode)
         {
             var path = new LinkedList<Vector2Int>();
             var current = meetNode;
@@ -103,6 +97,7 @@ namespace DetectionBehaviour
                 path.AddFirst(current);
                 current = cameFrom[current];
             }
+
             path.AddFirst(start); // Add the start node for the first half, meetNode for the second half
 
             return path;

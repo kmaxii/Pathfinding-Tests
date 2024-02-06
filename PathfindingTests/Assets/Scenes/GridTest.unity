@@ -245,6 +245,14 @@ MonoBehaviour:
   _gridSize: 191
   _obsRate: 90
   _changeToRed: {fileID: 11400000, guid: dee094d6496782c40a06cd142edeb3f1, type: 2}
+  setColor:
+    list:
+    - key: {fileID: 11400000, guid: 48574296642cfcd428410f954c89bfa6, type: 2}
+      value: {fileID: 11400000, guid: b4a81bb47a2dc3e4bb86eae26cebc0cd, type: 2}
+      duplicatedKey: 0
+    - key: {fileID: 11400000, guid: 0ab88c5cdaa731d4ba48b5d0c47f2da3, type: 2}
+      value: {fileID: 11400000, guid: a6299cab849e81e44b36e902c83cff06, type: 2}
+      duplicatedKey: 0
 --- !u!4 &358771624
 Transform:
   m_ObjectHideFlags: 0

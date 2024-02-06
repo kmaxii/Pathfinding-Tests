@@ -70,7 +70,7 @@ namespace DetectionBehaviour
                 if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                 {
                     costSoFar[next] = newCost;
-                    float priority = newCost + Heuristic(target, next);
+                    float priority = newCost + GetDistance(target, next);
                     frontier.Enqueue(next, priority);
                     cameFrom[next] = current;
                 }
@@ -101,12 +101,6 @@ namespace DetectionBehaviour
             path.AddFirst(start); // Add the start node for the first half, meetNode for the second half
 
             return path;
-        }
-
-        private float Heuristic(Vector2Int a, Vector2Int b)
-        {
-            // Manhattan distance
-            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
         }
     }
 }

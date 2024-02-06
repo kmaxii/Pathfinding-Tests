@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using MaxisGeneralPurpose.Scriptable_objects;
+using QuickEye.Utility;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -30,10 +31,21 @@ namespace Visualization
 
         [Header("Events")] [SerializeField] private GameEventWithVector2Int _changeToRed;
 
+        [SerializeField] private UnityDictionary<GameEventWithVector2Int, Tile> setColor;
 
         private void OnEnable() {
             _changeToRed.RegisterListener(ChangeToCorrectPath);
             setMapEvent.RegisterListener(VisualizeGrid);
+            foreach (var keyValuePair in setColor)
+            {
+                
+                keyValuePair.Key.RegisterListener((pos) =>
+                {
+                    Vector3Int newPos = new Vector3Int(pos.x, pos.y, 0);
+
+                    _tilemap.SetTile(newPos, keyValuePair.Value);
+                });
+            }
         }
 
         private void OnDisable() {
