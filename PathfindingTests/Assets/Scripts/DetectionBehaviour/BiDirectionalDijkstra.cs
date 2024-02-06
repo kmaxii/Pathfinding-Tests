@@ -8,7 +8,7 @@ namespace DetectionBehaviour
 
     public class BiDirectionalDijkstra : DetectionBehaviour
     {
-        public override LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end)
+        public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end)
         {
             // Set up for forward search
             var cameFromStart = new Dictionary<Vector2Int, Vector2Int>();
@@ -28,40 +28,45 @@ namespace DetectionBehaviour
 
             // Meet node
             Vector2Int? meetNode = null;
+            
+            int explored = 0;
 
             while (frontierStart.Count > 0 && frontierEnd.Count > 0)
             {
                 // Forward search step
                 if (frontierStart.Count > 0)
                 {
+                    explored++;
                     var currentStart = frontierStart.Dequeue();
                     if (cameFromEnd.ContainsKey(currentStart))
                     {
                         meetNode = currentStart;
                         break;
                     }
-                    ExploreNeighbours(currentStart, cameFromStart, costSoFarStart, frontierStart);
+
+                    ExploreNeighbours(currentStart, end, cameFromStart, costSoFarStart, frontierStart);
                 }
 
                 // Backward search step
-                if (frontierEnd.Count > 0)
+                if (frontierEnd.Count <= 0) continue;
+                explored++;
+                var currentEnd = frontierEnd.Dequeue();
+                if (cameFromStart.ContainsKey(currentEnd))
                 {
-                    var currentEnd = frontierEnd.Dequeue();
-                    if (cameFromStart.ContainsKey(currentEnd))
-                    {
-                        meetNode = currentEnd;
-                        break;
-                    }
-                    ExploreNeighbours(currentEnd, cameFromEnd, costSoFarEnd, frontierEnd);
+                    meetNode = currentEnd;
+                    break;
                 }
+
+                ExploreNeighbours(currentEnd, start, cameFromEnd, costSoFarEnd, frontierEnd);
             }
 
-            if (meetNode == null) return new LinkedList<Vector2Int>(); // No path found
-
-            return BuildPath(cameFromStart, cameFromEnd, start, end, meetNode.Value);
+            return meetNode == null ? (new LinkedList<Vector2Int>(), 0) : // No path found
+                (BuildPath(cameFromStart, cameFromEnd, start, end, meetNode.Value), explored);
         }
 
-        private void ExploreNeighbours(Vector2Int current, Dictionary<Vector2Int, Vector2Int> cameFrom, Dictionary<Vector2Int, float> costSoFar, PriorityQueue<Vector2Int, float> frontier)
+        private void ExploreNeighbours(Vector2Int current, Vector2Int target,
+            Dictionary<Vector2Int, Vector2Int> cameFrom, Dictionary<Vector2Int, float> costSoFar,
+            PriorityQueue<Vector2Int, float> frontier)
         {
             foreach (var next in GetNeighbours(current))
             {
@@ -69,14 +74,15 @@ namespace DetectionBehaviour
                 if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                 {
                     costSoFar[next] = newCost;
-                    float priority = newCost;
+                    float priority = newCost; // + Heuristic(target, next);
                     frontier.Enqueue(next, priority);
                     cameFrom[next] = current;
                 }
             }
         }
 
-        private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFromStart, Dictionary<Vector2Int, Vector2Int> cameFromEnd, Vector2Int start, Vector2Int end, Vector2Int meetNode)
+        private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFromStart,
+            Dictionary<Vector2Int, Vector2Int> cameFromEnd, Vector2Int start, Vector2Int end, Vector2Int meetNode)
         {
             var pathStart = BuildHalfPath(cameFromStart, start, meetNode);
             var pathEnd = BuildHalfPath(cameFromEnd, end, meetNode);
@@ -86,7 +92,8 @@ namespace DetectionBehaviour
             return path;
         }
 
-        private LinkedList<Vector2Int> BuildHalfPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start, Vector2Int meetNode)
+        private LinkedList<Vector2Int> BuildHalfPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start,
+            Vector2Int meetNode)
         {
             var path = new LinkedList<Vector2Int>();
             var current = meetNode;

@@ -30,6 +30,13 @@ public static class EnhancedCsvFileWriter
 
         _rows.Add(row);
     }
+    
+    public static void ElementToRow(string element)
+    {
+        if (_rows.Count == 0)
+            _rows.Add(new List<string>());
+        _rows[^1].Add(element);
+    }
 
     // Call this method to write all accumulated rows to the CSV file.
     public static void FlushDataToFile()

@@ -7,12 +7,14 @@ namespace DetectionBehaviour
 
     public class Dijkstra : DetectionBehaviour
     {
-        public override LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end)
+        public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end)
         {
             var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
             var costSoFar = new Dictionary<Vector2Int, float>();
             var frontier = new PriorityQueue<Vector2Int, float>();
             frontier.Enqueue(start, 0);
+            int explored = 0;
+
 
             cameFrom[start] = start;
             costSoFar[start] = 0;
@@ -21,6 +23,8 @@ namespace DetectionBehaviour
             {
                 var current = frontier.Dequeue();
 
+                explored++;
+                
                 if (current.Equals(end))
                     break;
 
@@ -37,7 +41,7 @@ namespace DetectionBehaviour
                 }
             }
 
-            return BuildPath(cameFrom, start, end);
+            return (BuildPath(cameFrom, start, end), explored);
         }
 
         private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start,

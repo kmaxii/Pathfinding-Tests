@@ -8,7 +8,7 @@ namespace DetectionBehaviour
 
         [SerializeField] private MapData mapData;
 
-        public abstract LinkedList<Vector2Int> GetShortestPath(Vector2Int start, Vector2Int end);
+        public abstract (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end);
         
         protected IEnumerable<Vector2Int> GetNeighbours(Vector2Int position)
         {

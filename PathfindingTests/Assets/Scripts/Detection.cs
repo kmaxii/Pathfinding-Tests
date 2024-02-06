@@ -24,6 +24,7 @@ public class Detection : MonoBehaviour
     public static readonly HashSet<Tuple<Vector2Int, Vector2Int>> Lines = new();
     private readonly HashSet<int> _stoppedAlgorithms = new();
     private List<float[]> _dataToWrite = new();
+    private List<float[]> _nodesExploredToWrite = new();
     [SerializeField] private MapData mapData;
 
     private int _currentUpdate;
@@ -34,14 +35,17 @@ public class Detection : MonoBehaviour
         List<string> headers = new List<string> { "MapSize" };
         foreach (var behaviour in detectionBehaviours)
         {
-            headers.Add(behaviour.name);
+            headers.Add(behaviour.name + "Time");
+            headers.Add(behaviour.name + "ExploredNodes");
         }
         EnhancedCsvFileWriter.Initialize("DetectionData.csv", headers);
 
         _dataToWrite = new List<float[]>();
+        _nodesExploredToWrite = new List<float[]>();
         for (int i = 0; i < updatesToAverage; i++)
         {
             _dataToWrite.Add(new float[detectionBehaviours.Count]);
+            _nodesExploredToWrite.Add(new float[detectionBehaviours.Count]);
         }
     }
 
@@ -82,13 +86,14 @@ public class Detection : MonoBehaviour
         var algorithm = detectionBehaviours[i];
         var startTime = Time.realtimeSinceStartup;
 
-        var linkedList = algorithm.GetShortestPath(startPos, endPos);
-
-        resolutionBehaviour.Resolve(linkedList);
-
+        var algoResult = algorithm.GetShortestPath(startPos, endPos);
         var algorithmTime = Time.realtimeSinceStartup - startTime;
 
+        resolutionBehaviour.Resolve(algoResult.Item1);
+        
+
         _dataToWrite[_currentUpdate][i] = algorithmTime;
+        _nodesExploredToWrite[_currentUpdate][i] = algoResult.nodesExplored;
     }
 
     private void WriteToFile()
@@ -97,17 +102,25 @@ public class Detection : MonoBehaviour
         for (var i = 0; i < detectionBehaviours.Count; i++)
         {
             float algorithmTime = 0;
+            float nodesExplored = 0;
             foreach (var floats in _dataToWrite)
             {
                 algorithmTime += floats[i];
             }
 
+            foreach (var num in _nodesExploredToWrite)
+            {
+                nodesExplored += num[i];
+            }
+            
             algorithmTime /= _dataToWrite.Count;
+            nodesExplored /= _nodesExploredToWrite.Count;
 
             if (algorithmTime > cancelDurationFactor)
                 _stoppedAlgorithms.Add(i);
 
             toWrite.Add((algorithmTime * timeMultiplier).ToString(CultureInfo.InvariantCulture));
+            toWrite.Add(nodesExplored.ToString(CultureInfo.InvariantCulture));
         }
 
         // Use the EnhancedCsvFileWriter to add a row
