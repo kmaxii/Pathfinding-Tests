@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using UnityEngine;
 
 public class Detection : MonoBehaviour
@@ -33,12 +34,9 @@ public class Detection : MonoBehaviour
     {
         // Initialize CSV file with dynamic headers based on the detection behaviours
         List<string> headers = new List<string> { "MapSize" };
-        foreach (var behaviour in detectionBehaviours)
-        {
-            headers.Add(behaviour.name + "_Time");
-            headers.Add(behaviour.name + "_ExploredNodes");
-            headers.Add(behaviour.name + "_PathLength");
-        }
+        headers.AddRange(detectionBehaviours.Select(behaviour => behaviour.name + "_Time"));       
+        headers.AddRange(detectionBehaviours.Select(behaviour => behaviour.name + "_ExploredNodes"));
+        headers.AddRange(detectionBehaviours.Select(behaviour => behaviour.name + "_PathLength"));
         EnhancedCsvFileWriter.Initialize("DetectionData.csv", headers);
         
         for (int i = 0; i < 3; i++)
@@ -106,35 +104,39 @@ public class Detection : MonoBehaviour
         List<string> toWrite = new List<string> { mapData.MapSize.ToString() };
         for (var i = 0; i < detectionBehaviours.Count; i++)
         {
-            float algorithmTime = 0;
-            float nodesExplored = 0;
-            float pathLength = 0;
-            foreach (var floats in _dataToWrite[0])
-            {
-                algorithmTime += floats[i];
-            }
+            var algorithmTime = _dataToWrite[0].Sum(floats => floats[i]);
 
-            foreach (var num in _dataToWrite[1])
-            {
-                nodesExplored += num[i];
-            }
-            
-            foreach (var num in _dataToWrite[2])
-            {
-                pathLength += num[i];
-            }
-            
             algorithmTime /= _dataToWrite[0].Count;
-            nodesExplored /= _dataToWrite[1].Count;
-            pathLength /= _dataToWrite[2].Count;
 
             if (algorithmTime > cancelDurationFactor)
                 _stoppedAlgorithms.Add(i);
 
             toWrite.Add((algorithmTime * timeMultiplier).ToString(CultureInfo.InvariantCulture));
+
+        }
+        
+        for (var i = 0; i < detectionBehaviours.Count; i++)
+        {
+            var nodesExplored = _dataToWrite[1].Sum(num => num[i]);
+
+            nodesExplored /= _dataToWrite[1].Count;
+
             toWrite.Add(nodesExplored.ToString(CultureInfo.InvariantCulture));
+        }
+        
+        for (var i = 0; i < detectionBehaviours.Count; i++)
+        {
+            var pathLength = _dataToWrite[2].Sum(num => num[i]);
+
+            pathLength /= _dataToWrite[2].Count;
+
             toWrite.Add(pathLength.ToString(CultureInfo.InvariantCulture));
         }
+        
+        
+        
+        
+        
 
         // Use the EnhancedCsvFileWriter to add a row
         EnhancedCsvFileWriter.AddRow(toWrite);
