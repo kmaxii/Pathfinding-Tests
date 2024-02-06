@@ -35,13 +35,11 @@ namespace DetectionBehaviour
                 foreach (var next in GetNeighbours(current))
                 {
                     float newCost = costSoFar[current] + GetDistance(current, next);
-                    if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
-                    {
-                        costSoFar[next] = newCost;
-                        float priority = newCost;
-                        frontier.Enqueue(next, priority);
-                        cameFrom[next] = current;
-                    }
+                    if (costSoFar.ContainsKey(next) && !(newCost < costSoFar[next])) continue;
+                    costSoFar[next] = newCost;
+                    float priority = newCost;
+                    frontier.EnqueueWithoutDuplicates(next, priority);
+                    cameFrom[next] = current;
                 }
             }
 

@@ -84,7 +84,7 @@ namespace DetectionBehaviour
                 {
                     costSoFar[next] = newCost;
                     float priority = newCost; // + Heuristic(target, next);
-                    frontier.Enqueue(next, priority);
+                    frontier.EnqueueWithoutDuplicates(next, priority);
                     cameFrom[next] = current;
                 }
             }
