@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Priority_Queue;
 using UnityEngine;
 
 namespace DetectionBehaviour
@@ -13,7 +14,7 @@ namespace DetectionBehaviour
             // Set up for forward search
             var cameFromStart = new Dictionary<Vector2Int, Vector2Int>();
             var costSoFarStart = new Dictionary<Vector2Int, float>();
-            var frontierStart = new PriorityQueue<Vector2Int, float>();
+            var frontierStart = new SimplePriorityQueue<Vector2Int>();
             frontierStart.Enqueue(start, 0);
             cameFromStart[start] = start;
             costSoFarStart[start] = 0;
@@ -21,7 +22,7 @@ namespace DetectionBehaviour
             // Set up for backward search
             var cameFromEnd = new Dictionary<Vector2Int, Vector2Int>();
             var costSoFarEnd = new Dictionary<Vector2Int, float>();
-            var frontierEnd = new PriorityQueue<Vector2Int, float>();
+            var frontierEnd = new SimplePriorityQueue<Vector2Int>();
             frontierEnd.Enqueue(end, 0);
             cameFromEnd[end] = end;
             costSoFarEnd[end] = 0;
@@ -74,7 +75,7 @@ namespace DetectionBehaviour
 
         private void ExploreNeighbours(Vector2Int current, Vector2Int target,
             Dictionary<Vector2Int, Vector2Int> cameFrom, Dictionary<Vector2Int, float> costSoFar,
-            PriorityQueue<Vector2Int, float> frontier)
+            SimplePriorityQueue<Vector2Int> frontier)
         {
             foreach (var next in GetNeighbours(current))
             {

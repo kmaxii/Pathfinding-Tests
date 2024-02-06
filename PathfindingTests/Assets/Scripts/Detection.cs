@@ -24,8 +24,7 @@ public class Detection : MonoBehaviour
     public static readonly HashSet<Tuple<Vector2Int, Vector2Int>> Lines = new();
     private readonly HashSet<int> _stoppedAlgorithms = new();
     private List<List<float[]>> _dataToWrite = new();
-    private List<float[]> _algoTimes = new();
-    private List<float[]> _nodesExploredToWrite = new();
+
     [SerializeField] private MapData mapData;
 
     private int _currentUpdate;
@@ -41,9 +40,7 @@ public class Detection : MonoBehaviour
             headers.Add(behaviour.name + "_PathLength");
         }
         EnhancedCsvFileWriter.Initialize("DetectionData.csv", headers);
-
-        _algoTimes = new List<float[]>();
-        _nodesExploredToWrite = new List<float[]>();
+        
         for (int i = 0; i < 3; i++)
         {
             _dataToWrite.Add(new List<float[]>());
@@ -54,12 +51,6 @@ public class Detection : MonoBehaviour
             }
         }
         
-        for (int j = 0; j < updatesToAverage; j++)
-        {
-            _algoTimes.Add(new float[detectionBehaviours.Count]);
-            _nodesExploredToWrite.Add(new float[detectionBehaviours.Count]);
-        }
-
     }
 
     void Update()
@@ -107,8 +98,7 @@ public class Detection : MonoBehaviour
         _dataToWrite[0][_currentUpdate][i] = algorithmTime;
         _dataToWrite[1][_currentUpdate][i] = algoResult.nodesExplored;
         _dataToWrite[2][_currentUpdate][i] = algoResult.Item1.Count;
-        _algoTimes[_currentUpdate][i] = algorithmTime;
-        _nodesExploredToWrite[_currentUpdate][i] = algoResult.nodesExplored;
+
     }
 
     private void WriteToFile()

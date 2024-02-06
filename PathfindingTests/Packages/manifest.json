@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.github-glitchenzo.nugetforunity": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
     "com.quickeye.utility": "https://github.com/ErnSur/QuickEye-Utility.git",
     "com.unity.collab-proxy": "1.15.17",
     "com.unity.feature.2d": "1.0.0",

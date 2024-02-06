@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Priority_Queue;
 using UnityEngine;
 
 namespace DetectionBehaviour
@@ -10,7 +11,7 @@ namespace DetectionBehaviour
         {
             var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
             var costSoFar = new Dictionary<Vector2Int, float>();
-            var frontier = new PriorityQueue<Vector2Int, float>();
+            var frontier  = new SimplePriorityQueue <Vector2Int>();
             frontier.Enqueue(start, 0);
             int explored = 0;
 
