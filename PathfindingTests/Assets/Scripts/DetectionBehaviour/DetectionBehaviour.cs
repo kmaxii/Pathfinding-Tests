@@ -53,7 +53,10 @@ namespace DetectionBehaviour
 
             //      return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y);
             //return GetDistanceSquared(first, second);
-             return Mathf.Sqrt(GetDistanceSquared(first, second));
+       //      return Mathf.Sqrt(GetDistanceSquared(first, second));
+             
+             return GetDistanceSquared(first, second);
+             
 
             /*float num1 = first.x - second.x;
             float num2 = first.y - second.y;
@@ -65,7 +68,7 @@ namespace DetectionBehaviour
         {
             float num1 = first.x - second.x;
             float num2 = first.y - second.y;
-            return num1 * num1 + num2 * num2;
+            return Mathf.Abs(num1) + Mathf.Abs(num2);
         }
     }
 }

@@ -502,9 +502,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
-  seed: 0
-  frequency: 5
-  width: 100
+  seed: 25
+  frequency: 4
+  width: 500
 --- !u!4 &1776321783
 Transform:
   m_ObjectHideFlags: 0
@@ -550,16 +550,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionBehaviours:
-  - {fileID: 11400000, guid: db224456bd665324a8586123a8d00bd6, type: 2}
-  - {fileID: 11400000, guid: d0e8ca70552231e4295a837b97b1d89c, type: 2}
   - {fileID: 11400000, guid: 0ff38aa4268a2a9439f49ab43ba5de81, type: 2}
-  - {fileID: 11400000, guid: c0415ff81e527d84cb0278cbe3fde67c, type: 2}
   resolutionBehaviour: {fileID: 11400000, guid: 86563f6a5f1148641abec13193ea657c, type: 2}
   cancelDurationFactor: 1
   updatesToAverage: 10
   timeMultiplier: 1000
   startPos: {x: 3, y: 3}
-  endPos: {x: 95, y: 95}
+  endPos: {x: 499, y: 497}
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
 --- !u!4 &2002827210
 Transform:
