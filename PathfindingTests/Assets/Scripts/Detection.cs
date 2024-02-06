@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using Visualization;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 public class Detection : MonoBehaviour
@@ -120,15 +122,23 @@ public class Detection : MonoBehaviour
     {
         var algorithm = detectionBehaviours[i];
         var startTime = Time.realtimeSinceStartup;
-
-        var algoResult = algorithm.GetShortestPath(mapData.startPos, mapData.endPos);
-        var algorithmTime = Time.realtimeSinceStartup - startTime;
-
-        resolutionBehaviour.Resolve(algoResult.Item1);
         
-        _dataToWrite[0][_currentUpdate][i] = algorithmTime;
-        _dataToWrite[1][_currentUpdate][i] = algoResult.nodesExplored;
-        _dataToWrite[2][_currentUpdate][i] = algoResult.Item1.Count;
+        var algoResult = algorithm.GetShortestPath(mapData.startPos, mapData.endPos);
+        if (algoResult.Item1.Count > 0) {
+            var algorithmTime = Time.realtimeSinceStartup - startTime;
+
+            resolutionBehaviour.Resolve(algoResult.Item1);
+        
+            _dataToWrite[0][_currentUpdate][i] = algorithmTime;
+            _dataToWrite[1][_currentUpdate][i] = algoResult.nodesExplored;
+            _dataToWrite[2][_currentUpdate][i] = algoResult.Item1.Count;
+        }
+        else {
+            SetRandomStartAndEndPos();
+            gridVisual.ResetGrid();
+            gridVisual.VisualizeGrid();
+            RunDetectionAlgorithm(i);
+        }
     }
 
     private void WriteToFile()
