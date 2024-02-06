@@ -52,10 +52,11 @@ namespace DetectionBehaviour
             //return GetDistanceSquared(first, second);
             //return Mathf.Sqrt(GetDistanceSquared(first, second));
             //return GetDistanceSquared(first, second);
+            return Vector2.Distance(first, second);
             
-            float num1 = Mathf.Abs(first.x - second.x);
+            /*float num1 = Mathf.Abs(first.x - second.x);
             float num2 = Mathf.Abs(first.y - second.y);
-            return num1 + num2;
+            return num1 + num2;*/
         }
 
         private float GetDistanceSquared(Vector2Int first, Vector2Int second) {
