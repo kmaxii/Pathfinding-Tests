@@ -64,9 +64,7 @@ public class Detection : MonoBehaviour
 
         
         
-        //  Set random start and end positions
-        SetRandomStartAndEndPos();
-        
+
         //  Reset the grid
         gridVisual.ResetGrid();
         
@@ -111,6 +109,10 @@ public class Detection : MonoBehaviour
 
         if (_currentUpdate != updatesToAverage)
             return;
+        
+        //  Set random start and end positions
+        SetRandomStartAndEndPos();
+
 
         // Reset variable
         _currentUpdate = 0;
