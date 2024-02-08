@@ -20,31 +20,45 @@ namespace DetectionBehaviour
             var x = position.x;
             var y = position.y;
 
-            int mapLength = mapData.map.GetLength(0);
+            int mapWidth = mapData.map.GetLength(0); // Assuming square map for width and height
+            int mapHeight = mapData.map.GetLength(1); // Use if map is not square
 
-            if (x > 0 && mapData.CheckCoordinate(x - 1, y))
-                neighbours.Add(new Vector2Int(x - 1, y));
-            if (x < mapLength - 1 && mapData.CheckCoordinate(x + 1, y))
-                neighbours.Add(new Vector2Int(x + 1, y));
-            if (y > 0 && mapData.CheckCoordinate(x, y - 1))
-                neighbours.Add(new Vector2Int(x, y - 1));
-            if (y < mapLength - 1 && mapData.CheckCoordinate(x, y + 1))
-                neighbours.Add(new Vector2Int(x, y + 1));
+            // Add cardinal neighbors
+            // Up
+            if (y < mapHeight - 1 && mapData.CheckCoordinate(x, y + 1)) 
+                neighbours.Add(new Vector2Int(x, y + 1)); 
+            // Right
+            if (x < mapWidth - 1 && mapData.CheckCoordinate(x + 1, y)) 
+                neighbours.Add(new Vector2Int(x + 1, y)); 
+            // Down
+            if (y > 0 && mapData.CheckCoordinate(x, y - 1)) 
+                neighbours.Add(new Vector2Int(x, y - 1)); 
+            // Left
+            if (x > 0 && mapData.CheckCoordinate(x - 1, y)) 
+                neighbours.Add(new Vector2Int(x - 1, y)); 
 
-            //Add diagonal neighbours
-            if (x > 0 && y > 0 && mapData.CheckCoordinate(x - 1, y - 1))
-                neighbours.Add(new Vector2Int(x - 1, y - 1));
-            if (x < mapLength - 1 && y < mapLength - 1 &&
-                mapData.CheckCoordinate(x + 1, y + 1))
+            // Add diagonal neighbours
+            // Up Right
+            if (x < mapWidth - 1 && y < mapHeight - 1 && mapData.CheckCoordinate(x + 1, y + 1) && (mapData.CheckCoordinate(x + 1, y) || mapData.CheckCoordinate(x, y + 1))) {
                 neighbours.Add(new Vector2Int(x + 1, y + 1));
-            if (x > 0 && y < mapLength - 1 && mapData.CheckCoordinate(x - 1, y + 1))
-                neighbours.Add(new Vector2Int(x - 1, y + 1));
-            if (x < mapLength - 1 && y > 0 && mapData.CheckCoordinate(x + 1, y - 1))
+            }
+            // Down Right
+            if (x < mapWidth - 1 && y > 0 && mapData.CheckCoordinate(x + 1, y - 1) && (mapData.CheckCoordinate(x + 1, y) || mapData.CheckCoordinate(x, y - 1))) {
                 neighbours.Add(new Vector2Int(x + 1, y - 1));
+            }
+            // Down Left
+            if (x > 0 && y > 0 && mapData.CheckCoordinate(x - 1, y - 1) && (mapData.CheckCoordinate(x - 1, y) || mapData.CheckCoordinate(x, y - 1))) {
+                neighbours.Add(new Vector2Int(x - 1, y - 1));
+            }
+            // Up Left
+            if (x > 0 && y < mapHeight - 1 && mapData.CheckCoordinate(x - 1, y + 1) && (mapData.CheckCoordinate(x - 1, y) || mapData.CheckCoordinate(x, y + 1))) {
+                neighbours.Add(new Vector2Int(x - 1, y + 1));
+            }
 
 
             return neighbours;
         }
+
 
         protected float GetDistance(Vector2Int first, Vector2Int second) {
             //Chebyshev_distance
