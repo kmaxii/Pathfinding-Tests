@@ -142,7 +142,15 @@ public class Detection : MonoBehaviour
         
             _dataToWrite[0][_currentUpdate][i] = algorithmTime;
             _dataToWrite[1][_currentUpdate][i] = algoResult.nodesExplored;
-            _dataToWrite[2][_currentUpdate][i] = algoResult.Item1.Count;
+            
+            //Calcualte the actual length of the path
+            float pathLength = 0;
+            var path = algoResult.Item1.ToArray();
+            for (int j = 0; j < path.Length - 1; j++)
+            {
+                pathLength += Vector2Int.Distance(path[j], path[j + 1]);
+            }
+            _dataToWrite[2][_currentUpdate][i] = pathLength;
         }
         else {
             SetRandomStartAndEndPos();
