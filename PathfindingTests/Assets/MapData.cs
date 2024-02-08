@@ -25,6 +25,10 @@ public class MapData : ScriptableObject
 
     //Method to check a coordinate
     public bool CheckCoordinate(int x, int y) {
+        //Return false if the coordinate is out of bounds
+        if (x < 0 || x >= _width || y < 0 || y >= _width) {
+            return false;
+        }
         return map[x, y];
     }
 
