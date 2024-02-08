@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using MaxisGeneralPurpose.Scriptable_objects;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
 [CreateAssetMenu(menuName = "Custom/MapData")]
@@ -18,7 +19,7 @@ public class MapData : ScriptableObject
     [HideInInspector] public Vector2Int startPos;
     [HideInInspector] public Vector2Int endPos;
 
-    private int _width;
+    [FormerlySerializedAs("_width")] public int width;
 
     //Property to get the map size
     public int MapSize => map.GetLength(0);
@@ -26,7 +27,7 @@ public class MapData : ScriptableObject
     //Method to check a coordinate
     public bool CheckCoordinate(int x, int y) {
         //Return false if the coordinate is out of bounds
-        if (x < 0 || x >= _width || y < 0 || y >= _width) {
+        if (x < 0 || x >= width || y < 0 || y >= width) {
             return false;
         }
         return map[x, y];
@@ -38,7 +39,7 @@ public class MapData : ScriptableObject
         //  Measure the time for this function to run
         Stopwatch functionTimer = new Stopwatch();
         functionTimer.Start();
-        _width = width;
+        this.width = width;
         map = new bool[width, width];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < width; y++) {
@@ -85,11 +86,11 @@ public class MapData : ScriptableObject
         //  Measure the time for this function to run
         Stopwatch test = new Stopwatch();
         test.Start();
-        bool[,] visited = new bool[_width, _width];
+        bool[,] visited = new bool[width, width];
         List<List<Vector2Int>> regions = new List<List<Vector2Int>>();
 
-        for (int x = 0; x < _width; x++) {
-            for (int y = 0; y < _width; y++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < width; y++) {
                 if (!visited[x, y] && map[x, y]) {
                     List<Vector2Int> newRegion = new List<Vector2Int>();
                     Queue<Vector2Int> queue = new Queue<Vector2Int>();
@@ -103,7 +104,7 @@ public class MapData : ScriptableObject
                         // Check all four directions
                         foreach (var dir in new[] {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right}) {
                             Vector2Int next = tile + dir;
-                            if (next.x >= 0 && next.x < _width && next.y >= 0 && next.y < _width) {
+                            if (next.x >= 0 && next.x < width && next.y >= 0 && next.y < width) {
                                 if (!visited[next.x, next.y] && map[next.x, next.y]) {
                                     queue.Enqueue(next);
                                     visited[next.x, next.y] = true;
@@ -305,8 +306,8 @@ public class MapData : ScriptableObject
     }
 
     private void SetTileWalkable(Vector2Int tile) {
-        if (tile.x >= 0 && tile.x < _width && tile.y >= 0 &&
-            tile.y < _width) // Assuming _height is the height of your map
+        if (tile.x >= 0 && tile.x < width && tile.y >= 0 &&
+            tile.y < width) // Assuming _height is the height of your map
         {
             map[tile.x, tile.y] = true; // Make the tile walkable
         }
