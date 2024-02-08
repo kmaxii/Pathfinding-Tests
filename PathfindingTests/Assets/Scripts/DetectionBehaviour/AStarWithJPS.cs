@@ -64,10 +64,10 @@ namespace DetectionBehaviour
             return successors;
         }
 
-        private Vector2Int? Jump(int cx, int cy, int dx, int dy, Vector2Int start, Vector2Int end)
+        private Vector2Int? Jump(int current_x, int current_y, int dx, int dy, Vector2Int start, Vector2Int end)
         {
-            var nextX = cx + dx;
-            var nextY = cy + dy;
+            var nextX = current_x + dx;
+            var nextY = current_y + dy;
             
             //f it's blocked we can't jump here
             if (!mapData.CheckCoordinate(nextX, nextY)) 
@@ -82,38 +82,66 @@ namespace DetectionBehaviour
             //Diagonal Case
             if (dx != 0 && dy != 0)
             {
-                // Diagonal movement case.
-                if ((!IsValid(cx, cy + dy) && IsValid(cx + dx, cy)) || (!IsValid(cx + dx, cy) && IsValid(cx, cy + dy)))
+                
+                if (!IsWalkable(current_x + dx, current_y))
+                {
                     return nextPos;
+                }
+                else if (!IsWalkable(current_x, current_y + dy))
+                {
+                    return nextPos;
+                }
+                
 
                 // Check in horizontal and vertical directions for forced neighbors
                 //This is a special case for diagonal direction
-                if (!Jump(nextX, nextY, dx, 0, start, end).HasValue 
+                if (!Jump(nextX, nextY, dx, 0, start, end).HasValue
                     || !Jump(nextX, nextY, 0, dy, start, end).HasValue)
                     return nextPos;
             }
             else
             {
-                if (dx != 0)
+                if (dx != 0) // Horizontal case
                 {
-                    // Horizontal movement case.
-                    if ((!IsValid(cx - dx, cy + 1) && IsValid(cx, cy + 1)) || (!IsValid(cx - dx, cy - 1) && IsValid(cx, cy - 1)))
-                        return nextPos;
+                    if (!IsWalkable(current_x, current_y + 1))
+                    {
+                        if (IsWalkable(current_x + dx, current_y + 1))
+                        {
+                            return nextPos;
+                        }
+                    }
+                    else if (!IsWalkable(current_x, current_y - 1))
+                    {
+                        if (IsWalkable(current_x + dx, current_y - 1))
+                        {
+                            return nextPos;
+                        }
+                    }
                 }
-                else if (dy != 0)
+                else // Vertical case
                 {
-                    // Vertical movement case.
-                    if ((!IsValid(cx + 1, cy - dy) && IsValid(cx + 1, cy)) ||
-                        (!IsValid(cx - 1, cy - dy) && IsValid(cx - 1, cy)))
-                        return nextPos;
+                    if (!IsWalkable(current_x + 1, current_y))
+                    {
+                        if (IsWalkable(current_x + 1, current_y + dy))
+                        {
+                            return nextPos;
+                        }
+                    }
+                    else if (!IsWalkable(current_x - 1, current_y))
+                    {
+                        if (IsWalkable(current_x - 1, current_y + dy))
+                        {
+                            return nextPos;
+                        }
+                    }
                 }
-            }
 
+            }
             // Continue jumping in the current direction.
             return Jump(nextX, nextY, dx, dy, start, end);
         }
 
-        private bool IsValid(int x, int y)
+        private bool IsWalkable(int x, int y)
         {
             return mapData.CheckCoordinate(x, y);
         }
