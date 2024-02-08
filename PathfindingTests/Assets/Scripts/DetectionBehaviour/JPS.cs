@@ -57,43 +57,40 @@ namespace DetectionBehaviour {
 
             if (next == end) return next; // If the next node is the goal, return it as a jump point.
 
-            // Enhanced checks for diagonal movement
+            // Check for forced neighbors along the diagonal
             if (direction.x != 0 && direction.y != 0) {
-                // Check if moving diagonally gets us closer to the target in terms of the heuristic
-                if (GetDistance(next, end) < GetDistance(current, end)) {
-                    return next;
-                }
-
-                // Check for forced neighbors that would make this a valuable jump point
-                if (HasForcedNeighbors(current, direction)) {
-                    return next;
-                }
-
-                // Continue searching in the diagonal direction if no forced neighbors are found
-                Vector2Int? diagonalJump = FindJumpPoint(next, direction, end);
-                if (diagonalJump.HasValue) return diagonalJump;
-
-                // Also consider straight jumps from this position
-                if (FindJumpPoint(current, new Vector2Int(direction.x, 0), end).HasValue || FindJumpPoint(current, new Vector2Int(0, direction.y), end).HasValue) {
-                    return next;
-                }
-            } else {
-                // Simplified logic for straight jumps, similar to original implementation
-                if (HasForcedNeighbors(current, direction)) {
+                if ((mapData.CheckCoordinate(current.x + direction.x, current.y) &&
+                     !mapData.CheckCoordinate(current.x + direction.x, current.y - direction.y)) ||
+                    (mapData.CheckCoordinate(current.x, current.y + direction.y) &&
+                     !mapData.CheckCoordinate(current.x - direction.x, current.y + direction.y))) {
                     return next;
                 }
             }
+            else {
+                // Check for forced neighbors along the straight paths (horizontal/vertical)
+                if (direction.x != 0) {
+                    // Horizontal movement
+                    if ((!mapData.CheckCoordinate(current.x + direction.x, current.y + 1) &&
+                         mapData.CheckCoordinate(current.x, current.y + 1)) ||
+                        (!mapData.CheckCoordinate(current.x + direction.x, current.y - 1) &&
+                         mapData.CheckCoordinate(current.x, current.y - 1))) {
+                        return next;
+                    }
+                }
+                else if (direction.y != 0) {
+                    // Vertical movement
+                    if ((!mapData.CheckCoordinate(current.x + 1, current.y + direction.y) &&
+                         mapData.CheckCoordinate(current.x + 1, current.y)) ||
+                        (!mapData.CheckCoordinate(current.x - 1, current.y + direction.y) &&
+                         mapData.CheckCoordinate(current.x - 1, current.y))) {
+                        return next;
+                    }
+                }
+            }
 
-            return null; // Adjust based on your method's return requirements
+            // Recursively search for jump points in the direction of movement.
+            return FindJumpPoint(next, direction, end);
         }
-
-        private bool HasForcedNeighbors(Vector2Int current, Vector2Int direction) {
-            // Implement logic to check for forced neighbors around the current node
-            // based on the direction of movement. This function is crucial for determining
-            // the value of a jump point in both straight and diagonal directions.
-            return false; // Placeholder return statement
-        }
-
 
 // This function returns the primary search directions based on the start and end points.
 // It simplifies direction calculation for this example. An optimized implementation would adjust these based on specific use cases.
