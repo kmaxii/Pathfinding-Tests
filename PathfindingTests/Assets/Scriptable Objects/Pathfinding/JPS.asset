@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b525248553504447a83f1c27327ea561, type: 3}
+  m_Name: JPS
+  m_EditorClassIdentifier: 
+  mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
+  visualize: 1
+  color1: {fileID: 11400000, guid: 0ab88c5cdaa731d4ba48b5d0c47f2da3, type: 2}
+  color2: {fileID: 0}
