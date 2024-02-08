@@ -40,7 +40,6 @@ namespace DetectionBehaviour
                     cameFrom[next] = current;
                 }
             }
-
             return (BuildPath(cameFrom, start, end), explored);
         }
         

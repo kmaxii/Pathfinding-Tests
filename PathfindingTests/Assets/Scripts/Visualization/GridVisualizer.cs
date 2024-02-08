@@ -19,7 +19,8 @@ namespace Visualization
 
         [SerializeField] private Tile _obstacleTile;
         [SerializeField] private Tile _correctRouteTile;
-        [SerializeField] private Tile _startEndTile;
+        [SerializeField] private Tile _startTile;
+        [SerializeField] private Tile _endTile;
         [SerializeField] private Tilemap _tilemap;
 
         [Header("Scriptable Objects")] [FormerlySerializedAs("mapDataSO")] [SerializeField]
@@ -91,8 +92,8 @@ namespace Visualization
         }
 
         public void VisualizeStartAndEndPoints() {
-            SetTileOnTilemap(new Vector3Int(mapDataSo.startPos.x, mapDataSo.startPos.y, 0), _startEndTile);
-            SetTileOnTilemap(new Vector3Int(mapDataSo.endPos.x, mapDataSo.endPos.y, 0), _startEndTile);
+            SetTileOnTilemap(new Vector3Int(mapDataSo.startPos.x, mapDataSo.startPos.y, 0), _startTile);
+            SetTileOnTilemap(new Vector3Int(mapDataSo.endPos.x, mapDataSo.endPos.y, 0), _endTile);
         }
 
         public void ResetGrid() {

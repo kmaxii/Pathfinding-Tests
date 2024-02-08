@@ -240,7 +240,8 @@ MonoBehaviour:
   _walkableTile: {fileID: 11400000, guid: b40d1f25f14858148b14cbd132f6b0c9, type: 2}
   _obstacleTile: {fileID: 11400000, guid: 91b065e3198309b47b3a0a0a2d9c7f6c, type: 2}
   _correctRouteTile: {fileID: 11400000, guid: 21bb77b04f23dd6448bfcbae154b2fb3, type: 2}
-  _startEndTile: {fileID: 11400000, guid: 0a4acdc75fdbcb0409fdb0f444276ffc, type: 2}
+  _startTile: {fileID: 11400000, guid: 0a4acdc75fdbcb0409fdb0f444276ffc, type: 2}
+  _endTile: {fileID: 11400000, guid: a11fee44624c7444eb8cfce6297ee9a2, type: 2}
   _tilemap: {fileID: 1241822550}
   mapDataSo: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
   _gridSize: 191
@@ -248,10 +249,10 @@ MonoBehaviour:
   _changeToRed: {fileID: 11400000, guid: dee094d6496782c40a06cd142edeb3f1, type: 2}
   setColor:
     list:
-    - key: {fileID: 11400000, guid: 48574296642cfcd428410f954c89bfa6, type: 2}
+    - key: {fileID: 11400000, guid: 0ab88c5cdaa731d4ba48b5d0c47f2da3, type: 2}
       value: {fileID: 11400000, guid: bdaad10fd8fb6f3488521a9520f6d06b, type: 2}
       duplicatedKey: 0
-    - key: {fileID: 11400000, guid: 0ab88c5cdaa731d4ba48b5d0c47f2da3, type: 2}
+    - key: {fileID: 11400000, guid: 48574296642cfcd428410f954c89bfa6, type: 2}
       value: {fileID: 11400000, guid: 3fb33df12bccd184ba83119c3fd11c12, type: 2}
       duplicatedKey: 0
 --- !u!4 &358771624
@@ -503,9 +504,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
-  seed: 20
-  frequency: 4
-  width: 400
+  seed: 0
+  frequency: 5
+  width: 250
 --- !u!4 &1776321783
 Transform:
   m_ObjectHideFlags: 0
@@ -551,8 +552,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionBehaviours:
-  - {fileID: 11400000, guid: 0ff38aa4268a2a9439f49ab43ba5de81, type: 2}
-  - {fileID: 11400000, guid: c8e561c93ac236c478bf96b2b640aa2b, type: 2}
+  - {fileID: 11400000, guid: d0e8ca70552231e4295a837b97b1d89c, type: 2}
+  - {fileID: 11400000, guid: c0415ff81e527d84cb0278cbe3fde67c, type: 2}
   resolutionBehaviour: {fileID: 11400000, guid: 86563f6a5f1148641abec13193ea657c, type: 2}
   gridVisual: {fileID: 358771623}
   cancelDurationFactor: 1

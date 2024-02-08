@@ -29,16 +29,19 @@ namespace DetectionBehaviour
             
             // Meet node
             Vector2Int? meetNode = null;
+            var sharedNeighbors = Vector2Int.zero;
             
             int explored = 0;
 
             while (frontierStart.Count > 0 && frontierEnd.Count > 0)
             {
+                var currentStart = frontierStart.Dequeue();
+                var currentEnd = frontierEnd.Dequeue();
+                
                 // Forward search step
                 if (frontierStart.Count > 0)
                 {
                     explored++;
-                    var currentStart = frontierStart.Dequeue();
 
                     if (visualize)
                     {
@@ -48,15 +51,16 @@ namespace DetectionBehaviour
                     if (cameFromEnd.ContainsKey(currentStart))
                     {
                         meetNode = currentStart;
+                        //  Explore the neighbors that both sides share
+                        ExploreSharedNeighbours(currentStart, currentEnd, cameFromStart, costSoFarStart, frontierStart);
                         break;
                     }
-                    ExploreNeighbours(currentStart, end, cameFromStart, costSoFarStart, frontierStart);
+                    ExploreNeighbours(currentStart/*, end*/, cameFromStart, costSoFarStart, frontierStart);
                 }
 
                 // Backward search step
                 if (frontierEnd.Count <= 0) continue;
                 explored++;
-                var currentEnd = frontierEnd.Dequeue();
                 if (visualize)
                 {
                     color2.Raise(currentEnd);
@@ -65,29 +69,51 @@ namespace DetectionBehaviour
                 if (cameFromStart.ContainsKey(currentEnd))
                 {
                     meetNode = currentEnd;
+                    //  Explore the neighbors that both sides share
+                    ExploreSharedNeighbours(currentStart, currentEnd, cameFromStart, costSoFarStart, frontierStart);
                     break;
                 }
-                ExploreNeighbours(currentEnd, start, cameFromEnd, costSoFarEnd, frontierEnd);
+                ExploreNeighbours(currentEnd/*, start*/, cameFromEnd, costSoFarEnd, frontierEnd);
             }
             
             return meetNode == null ? (new LinkedList<Vector2Int>(), explored) : (BuildPath(cameFromStart, cameFromEnd, start, end, meetNode.Value), explored);
         }
 
-        private void ExploreNeighbours(Vector2Int current, Vector2Int target,
-            Dictionary<Vector2Int, Vector2Int> cameFrom, Dictionary<Vector2Int, float> costSoFar,
-            SimplePriorityQueue<Vector2Int> frontier)
-        {
-            foreach (var next in GetNeighbours(current))
-            {
+        private void ExploreNeighbours(Vector2Int current/*, Vector2Int target*/, Dictionary<Vector2Int, Vector2Int> cameFrom, 
+        Dictionary<Vector2Int, float> costSoFar, SimplePriorityQueue<Vector2Int> frontier) {
+        
+            foreach (var next in GetNeighbours(current)) {
+            
                 float newCost = costSoFar[current] + GetDistance(current, next);
-                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
-                {
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) {
+                    
                     costSoFar[next] = newCost;
                     float priority = newCost; // + Heuristic(target, next);
                     frontier.EnqueueWithoutDuplicates(next, priority);
                     cameFrom[next] = current;
                 }
             }
+        }
+
+        private void ExploreSharedNeighbours(Vector2Int firstNode, Vector2Int secondsNode/*, Vector2Int target*/, Dictionary<Vector2Int, Vector2Int> cameFrom, 
+            Dictionary<Vector2Int, float> costSoFar, SimplePriorityQueue<Vector2Int> frontier) {
+            //  när jag började skriva koden visste både jag o gud vad jag ville skulle hända. nu vet bara gud ;)
+        
+            foreach (var next in GetSharedNeighbors(firstNode, secondsNode)) {
+            
+                float newCost = costSoFar[firstNode] + GetDistance(firstNode, next);
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) {
+                    
+                    costSoFar[next] = newCost;
+                    float priority = newCost; // + Heuristic(target, next);
+                    frontier.EnqueueWithoutDuplicates(next, priority);
+                    cameFrom[next] = firstNode;
+                }
+            }
+        }
+
+        private IEnumerable<Vector2Int> GetSharedNeighbors(Vector2Int firstNode, Vector2Int secondNode) {
+            return GetNeighbours(firstNode).Intersect(GetNeighbours(secondNode));
         }
 
         private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFromStart, Dictionary<Vector2Int, Vector2Int> cameFromEnd, Vector2Int start, Vector2Int end, Vector2Int meetNode)
