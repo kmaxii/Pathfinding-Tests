@@ -64,8 +64,11 @@ public class Detection : MonoBehaviour
         if (_stoppedAlgorithms.Count == detectionBehaviours.Count)
             Application.Quit();
 
-        
-        
+
+        if (resetStart) {
+            resetStart = false;
+            SetRandomStartAndEndPos();
+        }
 
         //  Reset the grid
         gridVisual.ResetGrid();
@@ -76,6 +79,8 @@ public class Detection : MonoBehaviour
         //  Run the algorithms
         RunAlgorithms();
         
+        //  Visualize the start and end point
+        gridVisual.VisualizeStartAndEndPoints();
         
         //  Update run amount for debugs
         totalRuns++;
@@ -113,7 +118,7 @@ public class Detection : MonoBehaviour
             return;
         
         //  Set random start and end positions
-        SetRandomStartAndEndPos();
+        resetStart = true;
 
 
         // Reset variable
@@ -121,6 +126,8 @@ public class Detection : MonoBehaviour
 
         WriteToFile();
     }
+
+    private bool resetStart = false;
 
     private void RunDetectionAlgorithm(int i)
     {

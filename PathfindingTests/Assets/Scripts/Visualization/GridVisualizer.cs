@@ -88,6 +88,9 @@ namespace Visualization
                     }
                 }
             }
+        }
+
+        public void VisualizeStartAndEndPoints() {
             SetTileOnTilemap(new Vector3Int(mapDataSo.startPos.x, mapDataSo.startPos.y, 0), _startEndTile);
             SetTileOnTilemap(new Vector3Int(mapDataSo.endPos.x, mapDataSo.endPos.y, 0), _startEndTile);
         }

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using MaxisGeneralPurpose.Scriptable_objects;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 namespace DetectionBehaviour
 {
     public abstract class DetectionBehaviour : ScriptableObject
     {
-        [SerializeField] private MapData mapData;
+        [SerializeField] protected MapData mapData;
 
         [SerializeField] protected bool visualize;
         [SerializeField] protected GameEventWithVector2Int color1;
