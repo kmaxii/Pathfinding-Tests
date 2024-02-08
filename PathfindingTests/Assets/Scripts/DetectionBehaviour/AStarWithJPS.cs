@@ -32,7 +32,9 @@ namespace DetectionBehaviour
 
                 foreach (var next in GetSuccessors(current, start, end))
                 {
-                    float newCost = costSoFar[current] + GetDistance(current, next); // Assuming GetDistance calculates the straight-line distance
+                    float newCost =
+                        costSoFar[current] +
+                        GetDistance(current, next); // Assuming GetDistance calculates the straight-line distance
                     if (costSoFar.ContainsKey(next) && !(newCost < costSoFar[next])) continue;
                     costSoFar[next] = newCost;
                     float priority = newCost + GetDistance(end, next); // Heuristic
@@ -54,8 +56,8 @@ namespace DetectionBehaviour
                 var dx = Mathf.Clamp(neighbour.x - current.x, -1, 1);
                 var dy = Mathf.Clamp(neighbour.y - current.y, -1, 1);
 
-                var jumpPoint = Jump(current.x, current.y, dx, dy, start, end);
-                if (jumpPoint != null)
+                var jumpPoint = Jump(neighbour.x, neighbour.y, dx, dy, end);
+                if (jumpPoint.HasValue)
                 {
                     successors.Add(jumpPoint.Value);
                 }
@@ -64,10 +66,10 @@ namespace DetectionBehaviour
             return successors;
         }
 
-        private Vector2Int? Jump(int current_x, int current_y, int dx, int dy, Vector2Int start, Vector2Int end)
+        private Vector2Int? Jump(int currentX, int currentY, int dx, int dy, Vector2Int end)
         {
-            var nextX = current_x + dx;
-            var nextY = current_y + dy;
+            var nextX = currentX + dx;
+            var nextY = currentY + dy;
             
             //f it's blocked we can't jump here
             if (!mapData.CheckCoordinate(nextX, nextY)) 
@@ -83,11 +85,11 @@ namespace DetectionBehaviour
             if (dx != 0 && dy != 0)
             {
                 
-                if (!IsWalkable(current_x + dx, current_y))
+                if (!IsWalkable(currentX + dx, currentY))
                 {
                     return nextPos;
                 }
-                else if (!IsWalkable(current_x, current_y + dy))
+                else if (!IsWalkable(currentX, currentY + dy))
                 {
                     return nextPos;
                 }
@@ -95,24 +97,24 @@ namespace DetectionBehaviour
 
                 // Check in horizontal and vertical directions for forced neighbors
                 //This is a special case for diagonal direction
-                if (!Jump(nextX, nextY, dx, 0, start, end).HasValue
-                    || !Jump(nextX, nextY, 0, dy, start, end).HasValue)
+                if (!Jump(nextX, nextY, dx, 0, end).HasValue
+                    || !Jump(nextX, nextY, 0, dy, end).HasValue)
                     return nextPos;
             }
             else
             {
                 if (dx != 0) // Horizontal case
                 {
-                    if (!IsWalkable(current_x, current_y + 1))
+                    if (!IsWalkable(currentX, currentY + 1))
                     {
-                        if (IsWalkable(current_x + dx, current_y + 1))
+                        if (IsWalkable(currentX + dx, currentY + 1))
                         {
                             return nextPos;
                         }
                     }
-                    else if (!IsWalkable(current_x, current_y - 1))
+                    else if (!IsWalkable(currentX, currentY - 1))
                     {
-                        if (IsWalkable(current_x + dx, current_y - 1))
+                        if (IsWalkable(currentX + dx, currentY - 1))
                         {
                             return nextPos;
                         }
@@ -120,16 +122,16 @@ namespace DetectionBehaviour
                 }
                 else // Vertical case
                 {
-                    if (!IsWalkable(current_x + 1, current_y))
+                    if (!IsWalkable(currentX + 1, currentY))
                     {
-                        if (IsWalkable(current_x + 1, current_y + dy))
+                        if (IsWalkable(currentX + 1, currentY + dy))
                         {
                             return nextPos;
                         }
                     }
-                    else if (!IsWalkable(current_x - 1, current_y))
+                    else if (!IsWalkable(currentX - 1, currentY))
                     {
-                        if (IsWalkable(current_x - 1, current_y + dy))
+                        if (IsWalkable(currentX - 1, currentY + dy))
                         {
                             return nextPos;
                         }
@@ -138,14 +140,14 @@ namespace DetectionBehaviour
 
             }
             // Continue jumping in the current direction.
-            return Jump(nextX, nextY, dx, dy, start, end);
+            return Jump(nextX, nextY, dx, dy, end);
         }
 
         private bool IsWalkable(int x, int y)
         {
             return mapData.CheckCoordinate(x, y);
         }
-        
+
 
         // Keep the existing GetNeighbours, BuildPath methods as they are
         private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start,
