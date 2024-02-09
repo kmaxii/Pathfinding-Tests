@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using PathFinder;
-using PathFinder.Grid;
 using Priority_Queue;
 using UnityEngine;
 
 namespace DetectionBehaviour
 {
-    [CreateAssetMenu(menuName = "Custom/Pathfinding/NewJPS")]
-    public class NewJps : DetectionBehaviour
+    [CreateAssetMenu(menuName = "Custom/Pathfinding/JumpPointSearch")]
+    public class JumpPointSearch : DetectionBehaviour
     {
         public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end)
         {
@@ -60,7 +58,7 @@ namespace DetectionBehaviour
                 current = new Vector2Int(parent.x, parent.y);
             }
 
-            path.AddFirst(start); // Optionally add the start node
+            path.AddFirst(start); // Add the start node
 
             return path;
         }
@@ -95,14 +93,14 @@ namespace DetectionBehaviour
                 }
 
                 float tCurNodeToJumpNodeLen =
-                    Heuristic.Euclidean(Math.Abs(tJumpPoint.x - iNode.x), Math.Abs(tJumpPoint.y - iNode.y));
+                    Euclidean(Math.Abs(tJumpPoint.x - iNode.x), Math.Abs(tJumpPoint.y - iNode.y));
                 float tStartToJumpNodeLen =
                     iNode.startToCurNodeLen + tCurNodeToJumpNodeLen; 
 
                 if (tJumpNode.isOpened && !(tStartToJumpNodeLen < tJumpNode.startToCurNodeLen)) continue;
 
                 tJumpNode.startToCurNodeLen = tStartToJumpNodeLen;
-                tJumpNode.heuristicCurNodeToEndLen ??= Heuristic.Euclidean(Math.Abs(tJumpPoint.x - tEndX), Math.Abs(tJumpPoint.y - tEndY));
+                tJumpNode.heuristicCurNodeToEndLen ??= Euclidean(Math.Abs(tJumpPoint.x - tEndX), Math.Abs(tJumpPoint.y - tEndY));
                 tJumpNode.heuristicStartToEndLen =
                     tJumpNode.startToCurNodeLen + tJumpNode.heuristicCurNodeToEndLen.Value;
                 tJumpNode.parent = iNode;
@@ -201,8 +199,6 @@ namespace DetectionBehaviour
   
             int tX = iNode.x;
             int tY = iNode.y;
-            int tPx, tPy, tDx, tDy;
-
 
             if (iNode.parent == null)
             {
@@ -214,11 +210,11 @@ namespace DetectionBehaviour
             List<Vector2Int> tNeighbors = new();
 
             // directed pruning: can ignore most neighbors, unless forced.
-            tPx = tParent.x;
-            tPy = tParent.y;
+            var tPx = tParent.x;
+            var tPy = tParent.y;
             // get the normalized direction of travel
-            tDx = (tX - tPx) / Math.Max(Math.Abs(tX - tPx), 1);
-            tDy = (tY - tPy) / Math.Max(Math.Abs(tY - tPy), 1);
+            var tDx = (tX - tPx) / Math.Max(Math.Abs(tX - tPx), 1);
+            var tDy = (tY - tPy) / Math.Max(Math.Abs(tY - tPy), 1);
 
             // search diagonally
             if (tDx != 0 && tDy != 0)
@@ -305,6 +301,13 @@ namespace DetectionBehaviour
 
 
             return tNeighbors;
+        }
+
+        private static float Euclidean(int iDx, int iDy)
+        {
+            float tFdx = iDx;
+            float tFdy = iDy;
+            return (float)Math.Sqrt(tFdx * tFdx + tFdy * tFdy);
         }
     }
 }
