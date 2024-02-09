@@ -37,9 +37,9 @@ An Interface for the StaticGrid Class.
 */
 
 using System;
-using PathFinder.Grid;
+using EpPathFinding.cs;
 
-namespace EpPathFinding.cs
+namespace PathFinder.Grid
 {
     public class StaticGrid : BaseGrid
     {
@@ -59,26 +59,7 @@ namespace EpPathFinding.cs
             m_gridRect.maxY = iHeight - 1;
             this.m_nodes = buildNodes(iWidth, iHeight, iMatrix);
         }
-
-        public StaticGrid(StaticGrid b)
-            : base(b)
-        {
-            bool[][] tMatrix = new bool[b.width][];
-            for (int widthTrav = 0; widthTrav < b.width; widthTrav++)
-            {
-                tMatrix[widthTrav] = new bool[b.height];
-                for (int heightTrav = 0; heightTrav < b.height; heightTrav++)
-                {
-                    if (b.IsWalkableAt(widthTrav, heightTrav))
-                        tMatrix[widthTrav][heightTrav] = true;
-                    else
-                        tMatrix[widthTrav][heightTrav] = false;
-                }
-            }
-
-            this.m_nodes = buildNodes(b.width, b.height, tMatrix);
-        }
-
+        
         private Node[][] buildNodes(int iWidth, int iHeight, bool[][] iMatrix)
         {
             Node[][] tNodes = new Node[iWidth][];
@@ -144,48 +125,6 @@ namespace EpPathFinding.cs
         public override bool IsWalkableAt(GridPos iPos)
         {
             return IsWalkableAt(iPos.x, iPos.y);
-        }
-
-
-        public override void Reset()
-        {
-            Reset(null);
-        }
-
-        public void Reset(bool[][] iMatrix)
-        {
-            for (int widthTrav = 0; widthTrav < width; widthTrav++)
-            {
-                for (int heightTrav = 0; heightTrav < height; heightTrav++)
-                {
-                    m_nodes[widthTrav][heightTrav].Reset();
-                }
-            }
-
-            if (iMatrix == null)
-            {
-                return;
-            }
-
-            if (iMatrix.Length != width || iMatrix[0].Length != height)
-            {
-                throw new Exception("Matrix size does not fit");
-            }
-
-            for (int widthTrav = 0; widthTrav < width; widthTrav++)
-            {
-                for (int heightTrav = 0; heightTrav < height; heightTrav++)
-                {
-                    if (iMatrix[widthTrav][heightTrav])
-                    {
-                        m_nodes[widthTrav][heightTrav].walkable = true;
-                    }
-                    else
-                    {
-                        m_nodes[widthTrav][heightTrav].walkable = false;
-                    }
-                }
-            }
         }
     }
 }

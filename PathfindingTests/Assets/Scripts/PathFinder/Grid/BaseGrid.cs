@@ -271,8 +271,5 @@ namespace PathFinder.Grid
 
             return neighbors;
         }
-
-
-        public abstract void Reset();
     }
 }

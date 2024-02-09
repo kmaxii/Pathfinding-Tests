@@ -44,19 +44,8 @@ using PathFinder.Grid;
 
 namespace PathFinder
 {
-    public class JumpPointParam : ParamBase
-    {
-        public JumpPointParam(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
-            : base(iGrid, iStartPos, iEndPos)
-        {
-            openList = new IntervalHeap<Node>();
-        }
-        
-        //public List<Node> openList;
-        public IntervalHeap<Node> openList;
-    }
 
-    public class JumpPointFinder
+    public static class JumpPointFinder
     {
         public static List<GridPos> FindPath(JumpPointParam iParam)
         {
