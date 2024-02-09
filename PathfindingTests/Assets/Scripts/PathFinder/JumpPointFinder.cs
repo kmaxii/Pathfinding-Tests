@@ -47,7 +47,7 @@ namespace PathFinder
     public class JumpPointParam : ParamBase
     {
         public JumpPointParam(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
-            : base(iGrid, iStartPos, iEndPos, iMode)
+            : base(iGrid, iStartPos, iEndPos)
         {
             openList = new IntervalHeap<Node>();
         }
@@ -96,7 +96,7 @@ namespace PathFinder
 
         private static void IdentifySuccessors(JumpPointParam iParam, Node iNode)
         {
-            HeuristicDelegate tHeuristic = iParam.HeuristicFunc;
+            HeuristicDelegate tHeuristic = Heuristic.Euclidean;
             IntervalHeap<Node> tOpenList = iParam.openList;
             int tEndX = iParam.EndNode.x;
             int tEndY = iParam.EndNode.y;

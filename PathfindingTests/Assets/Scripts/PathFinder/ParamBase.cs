@@ -7,7 +7,7 @@ namespace PathFinder
 
     public abstract class ParamBase
     {
-        public ParamBase(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos, HeuristicMode iMode) : this(iGrid, iMode)
+        public ParamBase(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos) : this(iGrid)
         {
             m_startNode = m_searchGrid.GetNodeAt(iStartPos.x, iStartPos.y);
             m_endNode = m_searchGrid.GetNodeAt(iEndPos.x, iEndPos.y);
@@ -17,23 +17,14 @@ namespace PathFinder
                 m_endNode = new Node(iEndPos.x, iEndPos.y, true);
         }
 
-        public ParamBase(BaseGrid iGrid, HeuristicMode iMode)
+        public ParamBase(BaseGrid iGrid)
         {
-            SetHeuristic(iMode);
-
             m_searchGrid = iGrid;
             m_startNode = null;
             m_endNode = null;
         }
         
 
-        public HeuristicDelegate HeuristicFunc
-        {
-            get
-            {
-                return m_heuristic;
-            }
-        }
 
         public BaseGrid SearchGrid
         {
@@ -57,16 +48,10 @@ namespace PathFinder
                 return m_endNode;
             }
         }
-
-        private void SetHeuristic(HeuristicMode iMode)
-        {
-            m_heuristic = new HeuristicDelegate(Heuristic.Euclidean);
-               
-        }
+        
 
         protected BaseGrid m_searchGrid;
         protected Node m_startNode;
         protected Node m_endNode;
-        protected HeuristicDelegate m_heuristic;
     }
 }
