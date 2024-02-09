@@ -44,11 +44,6 @@ using EpPathFinding.cs;
 namespace PathFinder
 {
 
-    public enum EndNodeUnWalkableTreatment
-    {
-        ALLOW,
-        DISALLOW
-    };
 
 
     public class JumpPointParam : ParamBase
@@ -56,11 +51,9 @@ namespace PathFinder
 
 
 
-        public JumpPointParam(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos, EndNodeUnWalkableTreatment iAllowEndNodeUnWalkable = EndNodeUnWalkableTreatment.ALLOW, DiagonalMovement iDiagonalMovement = DiagonalMovement.Always, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
+        public JumpPointParam(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos, DiagonalMovement iDiagonalMovement = DiagonalMovement.Always, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
             : base(iGrid, iStartPos, iEndPos, iDiagonalMovement, iMode)
         {
-
-            CurEndNodeUnWalkableTreatment = iAllowEndNodeUnWalkable;
             openList = new IntervalHeap<Node>();
         }
 
@@ -71,14 +64,7 @@ namespace PathFinder
             openList = new IntervalHeap<Node>();
             //openList.Clear();
         }
-
-
-
-        public EndNodeUnWalkableTreatment CurEndNodeUnWalkableTreatment
-        {
-            get;
-            set;
-        }
+        
 
         //public List<Node> openList;
         public IntervalHeap<Node> openList;
@@ -94,7 +80,6 @@ namespace PathFinder
             Node tStartNode = iParam.StartNode;
             Node tEndNode = iParam.EndNode;
             Node tNode;
-            bool revertEndNodeWalkable = false;
 
             // set the `g` and `f` value of the start node to be 0
             tStartNode.startToCurNodeLen = 0;
@@ -104,11 +89,7 @@ namespace PathFinder
             tOpenList.Add(tStartNode);
             tStartNode.isOpened = true;
 
-            if (iParam.CurEndNodeUnWalkableTreatment == EndNodeUnWalkableTreatment.ALLOW && !iParam.SearchGrid.IsWalkableAt(tEndNode.x, tEndNode.y))
-            {
-                iParam.SearchGrid.SetWalkableAt(tEndNode.x, tEndNode.y, true);
-                revertEndNodeWalkable = true;
-            }
+     
 
             // while the open list is not empty
             while (tOpenList.Count > 0)
@@ -119,20 +100,13 @@ namespace PathFinder
 
                 if (tNode.Equals(tEndNode))
                 {
-                    if (revertEndNodeWalkable)
-                    {
-                        iParam.SearchGrid.SetWalkableAt(tEndNode.x, tEndNode.y, false);
-                    }
                     return Node.Backtrace(tNode); // rebuilding path
                 }
 
                 IdentifySuccessors(iParam, tNode);
             }
 
-            if (revertEndNodeWalkable)
-            {
-                iParam.SearchGrid.SetWalkableAt(tEndNode.x, tEndNode.y, false);
-            }
+
 
             // fail to find the path
             return new List<GridPos>();
