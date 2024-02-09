@@ -46,19 +46,12 @@ namespace PathFinder
 {
     public class JumpPointParam : ParamBase
     {
-        public JumpPointParam(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos,
-            DiagonalMovement iDiagonalMovement = DiagonalMovement.Always, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
-            : base(iGrid, iStartPos, iEndPos, iDiagonalMovement, iMode)
+        public JumpPointParam(BaseGrid iGrid, GridPos iStartPos, GridPos iEndPos, HeuristicMode iMode = HeuristicMode.EUCLIDEAN)
+            : base(iGrid, iStartPos, iEndPos, iMode)
         {
             openList = new IntervalHeap<Node>();
         }
-
-        internal override void _reset(GridPos iStartPos, GridPos iEndPos, BaseGrid iSearchGrid = null)
-        {
-            openList = new IntervalHeap<Node>();
-        }
-
-
+        
         //public List<Node> openList;
         public IntervalHeap<Node> openList;
     }
@@ -228,10 +221,6 @@ namespace PathFinder
             {
                 return Jump(iParam, iX + tDx, iY + tDy, iX, iY);
             }
-            else if (iParam.DiagonalMovement == DiagonalMovement.Always)
-            {
-                return Jump(iParam, iX + tDx, iY + tDy, iX, iY);
-            }
             else
             {
                 return null;
@@ -337,27 +326,13 @@ namespace PathFinder
                                 tNeighbors.Add(new GridPos(tX - 1, tY + tDy));
                             }
                         }
-                        else if (iParam.DiagonalMovement == DiagonalMovement.Always)
-                        {
-                            if (iParam.SearchGrid.IsWalkableAt(tX + 1, tY + tDy) &&
-                                !iParam.SearchGrid.IsWalkableAt(tX + 1, tY))
-                            {
-                                tNeighbors.Add(new GridPos(tX + 1, tY + tDy));
-                            }
-
-                            if (iParam.SearchGrid.IsWalkableAt(tX - 1, tY + tDy) &&
-                                !iParam.SearchGrid.IsWalkableAt(tX - 1, tY))
-                            {
-                                tNeighbors.Add(new GridPos(tX - 1, tY + tDy));
-                            }
-                        }
                     }
                 }
             }
             // return all neighbors if the node doesnt have a parent (aka is the start node)
             else
             {
-                tNeighborNodes = iParam.SearchGrid.GetNeighbors(iNode, iParam.DiagonalMovement);
+                tNeighborNodes = iParam.SearchGrid.GetNeighbors(iNode);
                 for (int i = 0; i < tNeighborNodes.Count; i++)
                 {
                     tNeighborNode = tNeighborNodes[i];

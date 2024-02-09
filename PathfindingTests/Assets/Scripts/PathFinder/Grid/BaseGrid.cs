@@ -203,7 +203,7 @@ namespace PathFinder.Grid
 
         public abstract bool IsWalkableAt(GridPos iPos);
 
-        public List<Node> GetNeighbors(Node iNode, DiagonalMovement diagonalMovement)
+        public List<Node> GetNeighbors(Node iNode)
         {
             int tX = iNode.x;
             int tY = iNode.y;

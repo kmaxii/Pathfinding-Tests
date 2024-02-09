@@ -32,7 +32,7 @@ namespace DetectionBehaviour
             
             GridPos startPos=new GridPos(mapData.startPos.x,mapData.startPos.y); 
             GridPos endPos = new GridPos(mapData.endPos.x,mapData.endPos.y);  
-            JumpPointParam jpParam = new JumpPointParam(searchGrid,startPos,endPos,  DiagonalMovement.Always, HeuristicMode.EUCLIDEAN);
+            JumpPointParam jpParam = new JumpPointParam(searchGrid,startPos,endPos);
             
             List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam); 
             
