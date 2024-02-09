@@ -32,7 +32,8 @@ public class MapData : ScriptableObject
         }
         return map[x, y];
     }
-
+    
+ 
 
     //Method to set the map to x size and percent chance for each to be false
     public void SetMap(int width, float frequency, int seed) {

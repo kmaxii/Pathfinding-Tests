@@ -52,7 +52,7 @@ namespace PathFinder.Grid
         public float? heuristicCurNodeToEndLen;
         public bool isOpened;
         public bool isClosed;
-        public Object parent;
+        public Node parent;
 
         public Node(int iX, int iY, bool? iWalkable = null)
         {
@@ -68,21 +68,7 @@ namespace PathFinder.Grid
             this.isClosed = false;
             this.parent = null;
         }
-
-        public void Reset(bool? iWalkable = null)
-        {
-            if (iWalkable.HasValue)
-                walkable = iWalkable.Value;
-            this.heuristicStartToEndLen = 0;
-            this.startToCurNodeLen = 0;
-            // this must be initialized as null to verify that its value never initialized
-            // 0 is not good candidate!!
-            this.heuristicCurNodeToEndLen = null;
-            this.isOpened = false;
-            this.isClosed = false;
-            this.parent = null;
-        }
-
+        
         public int CompareTo(Node iObj)
         {
             float result = this.heuristicStartToEndLen - iObj.heuristicStartToEndLen;
