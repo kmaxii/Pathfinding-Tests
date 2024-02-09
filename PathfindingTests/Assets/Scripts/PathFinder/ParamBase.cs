@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using EpPathFinding.cs;
+using PathFinder.Grid;
 
-namespace EpPathFinding.cs
+namespace PathFinder
 {
     public delegate float HeuristicDelegate(int iDx, int iDy);
 
@@ -89,24 +87,10 @@ namespace EpPathFinding.cs
             }
         }
 
-        public void SetHeuristic(HeuristicMode iMode)
+        private void SetHeuristic(HeuristicMode iMode)
         {
-            m_heuristic = null;
-            switch (iMode)
-            {
-                case HeuristicMode.MANHATTAN:
-                    m_heuristic = new HeuristicDelegate(Heuristic.Manhattan);
-                    break;
-                case HeuristicMode.EUCLIDEAN:
-                    m_heuristic = new HeuristicDelegate(Heuristic.Euclidean);
-                    break;
-                case HeuristicMode.CHEBYSHEV:
-                    m_heuristic = new HeuristicDelegate(Heuristic.Chebyshev);
-                    break;
-                default:
-                    m_heuristic = new HeuristicDelegate(Heuristic.Euclidean);
-                    break;
-            }
+            m_heuristic = new HeuristicDelegate(Heuristic.Euclidean);
+               
         }
 
         protected BaseGrid m_searchGrid;

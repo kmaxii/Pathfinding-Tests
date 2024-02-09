@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EpPathFinding.cs;
 using PathFinder;
+using PathFinder.Grid;
 using UnityEngine;
 
 namespace DetectionBehaviour

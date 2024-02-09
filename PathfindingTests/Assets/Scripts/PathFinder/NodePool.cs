@@ -38,6 +38,7 @@ An Interface for the NodePool Class.
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using PathFinder.Grid;
 
 namespace EpPathFinding.cs
 {

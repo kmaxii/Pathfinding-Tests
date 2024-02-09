@@ -54,9 +54,77 @@ namespace DetectionBehaviour
             if (x > 0 && y < mapHeight - 1 && mapData.CheckCoordinate(x - 1, y + 1) && (mapData.CheckCoordinate(x - 1, y) || mapData.CheckCoordinate(x, y + 1))) {
                 neighbours.Add(new Vector2Int(x - 1, y + 1));
             }
-
-
+            
             return neighbours;
+            
+            
+            /*
+             *     int tX = iNode.x;
+            int tY = iNode.y;
+            List<Node> neighbors = new List<Node>();
+            bool tS0 = false,
+                tD0 = false,
+                tS1 = false,
+                tD1 = false,
+                tS2 = false,
+                tD2 = false,
+                tS3 = false,
+                tD3 = false;
+
+            GridPos pos = new GridPos();
+            if (IsWalkableAt(pos.Set(tX, tY - 1)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+                tS0 = true;
+            }
+
+            if (IsWalkableAt(pos.Set(tX + 1, tY)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+                tS1 = true;
+            }
+
+            if (IsWalkableAt(pos.Set(tX, tY + 1)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+                tS2 = true;
+            }
+
+            if (IsWalkableAt(pos.Set(tX - 1, tY)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+                tS3 = true;
+            }
+
+
+            tD0 = tS3 || tS0;
+            tD1 = tS0 || tS1;
+            tD2 = tS1 || tS2;
+            tD3 = tS2 || tS3;
+
+
+            if (tD0 && IsWalkableAt(pos.Set(tX - 1, tY - 1)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+            }
+
+            if (tD1 && IsWalkableAt(pos.Set(tX + 1, tY - 1)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+            }
+
+            if (tD2 && IsWalkableAt(pos.Set(tX + 1, tY + 1)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+            }
+
+            if (tD3 && IsWalkableAt(pos.Set(tX - 1, tY + 1)))
+            {
+                neighbors.Add(GetNodeAt(pos));
+            }
+
+            return neighbors;
+             */
         }
 
 

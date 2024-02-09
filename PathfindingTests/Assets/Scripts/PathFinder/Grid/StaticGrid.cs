@@ -1,7 +1,7 @@
-﻿/*! 
+﻿/*!
 @file StaticGrid.cs
 @author Woong Gyu La a.k.a Chris. <juhgiyo@gmail.com>
-		<http://github.com/juhgiyo/eppathfinding.cs>
+        <http://github.com/juhgiyo/eppathfinding.cs>
 @date July 16, 2013
 @brief StaticGrid Interface
 @version 2.0
@@ -35,9 +35,9 @@ THE SOFTWARE.
 An Interface for the StaticGrid Class.
 
 */
+
 using System;
-using System.Collections.Generic;
-using System.Collections;
+using PathFinder.Grid;
 
 namespace EpPathFinding.cs
 {
@@ -49,13 +49,13 @@ namespace EpPathFinding.cs
 
         private Node[][] m_nodes;
 
-        public StaticGrid(int iWidth, int iHeight, bool[][] iMatrix = null):base()
+        public StaticGrid(int iWidth, int iHeight, bool[][] iMatrix = null) : base()
         {
             width = iWidth;
             height = iHeight;
             m_gridRect.minX = 0;
             m_gridRect.minY = 0;
-            m_gridRect.maxX = iWidth-1;
+            m_gridRect.maxX = iWidth - 1;
             m_gridRect.maxY = iHeight - 1;
             this.m_nodes = buildNodes(iWidth, iHeight, iMatrix);
         }
@@ -69,18 +69,18 @@ namespace EpPathFinding.cs
                 tMatrix[widthTrav] = new bool[b.height];
                 for (int heightTrav = 0; heightTrav < b.height; heightTrav++)
                 {
-                    if(b.IsWalkableAt(widthTrav,heightTrav))
+                    if (b.IsWalkableAt(widthTrav, heightTrav))
                         tMatrix[widthTrav][heightTrav] = true;
                     else
                         tMatrix[widthTrav][heightTrav] = false;
                 }
             }
+
             this.m_nodes = buildNodes(b.width, b.height, tMatrix);
         }
-       
+
         private Node[][] buildNodes(int iWidth, int iHeight, bool[][] iMatrix)
         {
-
             Node[][] tNodes = new Node[iWidth][];
             for (int widthTrav = 0; widthTrav < iWidth; widthTrav++)
             {
@@ -98,7 +98,7 @@ namespace EpPathFinding.cs
 
             if (iMatrix.Length != iWidth || iMatrix[0].Length != iHeight)
             {
-                throw new System.Exception("Matrix size does not fit");
+                throw new Exception("Matrix size does not fit");
             }
 
 
@@ -116,6 +116,7 @@ namespace EpPathFinding.cs
                     }
                 }
             }
+
             return tNodes;
         }
 
@@ -134,16 +135,6 @@ namespace EpPathFinding.cs
             return (iX >= 0 && iX < width) && (iY >= 0 && iY < height);
         }
 
-        public override bool SetWalkableAt(int iX, int iY, bool iWalkable)
-        {
-            this.m_nodes[iX][iY].walkable = iWalkable;
-            return true;
-        }
-
-        protected bool isInside(GridPos iPos)
-        {
-            return isInside(iPos.x, iPos.y);
-        }
 
         public override Node GetNodeAt(GridPos iPos)
         {
@@ -155,10 +146,6 @@ namespace EpPathFinding.cs
             return IsWalkableAt(iPos.x, iPos.y);
         }
 
-        public override bool SetWalkableAt(GridPos iPos, bool iWalkable)
-        {
-            return SetWalkableAt(iPos.x, iPos.y, iWalkable);
-        }
 
         public override void Reset()
         {
@@ -179,9 +166,10 @@ namespace EpPathFinding.cs
             {
                 return;
             }
+
             if (iMatrix.Length != width || iMatrix[0].Length != height)
             {
-                throw new System.Exception("Matrix size does not fit");
+                throw new Exception("Matrix size does not fit");
             }
 
             for (int widthTrav = 0; widthTrav < width; widthTrav++)
@@ -199,29 +187,5 @@ namespace EpPathFinding.cs
                 }
             }
         }
-
-        public override BaseGrid Clone()
-        {
-            int tWidth = width;
-            int tHeight = height;
-            Node[][] tNodes = this.m_nodes;
-
-            StaticGrid tNewGrid = new StaticGrid(tWidth, tHeight, null);
-
-            Node[][] tNewNodes = new Node[tWidth][];
-            for (int widthTrav = 0; widthTrav < tWidth; widthTrav++)
-            {
-                tNewNodes[widthTrav] = new Node[tHeight];
-                for (int heightTrav = 0; heightTrav < tHeight; heightTrav++)
-                {
-                    tNewNodes[widthTrav][heightTrav] = new Node(widthTrav, heightTrav, tNodes[widthTrav][heightTrav].walkable);
-                }
-            }
-            tNewGrid.m_nodes = tNewNodes;
-
-            return tNewGrid;
-        }
     }
-
-
 }
