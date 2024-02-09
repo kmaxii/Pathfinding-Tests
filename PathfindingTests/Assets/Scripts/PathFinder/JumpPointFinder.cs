@@ -85,7 +85,6 @@ namespace PathFinder
 
         private static void IdentifySuccessors(JumpPointParam iParam, Node iNode)
         {
-            HeuristicDelegate tHeuristic = Heuristic.Euclidean;
             IntervalHeap<Node> tOpenList = iParam.openList;
             int tEndX = iParam.EndNode.x;
             int tEndY = iParam.EndNode.y;
@@ -116,7 +115,7 @@ namespace PathFinder
 
                 // include distance, as parent may not be immediately adjacent:
                 float tCurNodeToJumpNodeLen =
-                    tHeuristic(Math.Abs(tJumpPoint.x - iNode.x), Math.Abs(tJumpPoint.y - iNode.y));
+                    Heuristic.Euclidean(Math.Abs(tJumpPoint.x - iNode.x), Math.Abs(tJumpPoint.y - iNode.y));
                 float tStartToJumpNodeLen =
                     iNode.startToCurNodeLen + tCurNodeToJumpNodeLen; // next `startToCurNodeLen` value
 
@@ -124,7 +123,7 @@ namespace PathFinder
 
                 tJumpNode.startToCurNodeLen = tStartToJumpNodeLen;
                 tJumpNode.heuristicCurNodeToEndLen = (tJumpNode.heuristicCurNodeToEndLen == null
-                    ? tHeuristic(Math.Abs(tJumpPoint.x - tEndX), Math.Abs(tJumpPoint.y - tEndY))
+                    ? Heuristic.Euclidean(Math.Abs(tJumpPoint.x - tEndX), Math.Abs(tJumpPoint.y - tEndY))
                     : tJumpNode.heuristicCurNodeToEndLen);
                 tJumpNode.heuristicStartToEndLen =
                     tJumpNode.startToCurNodeLen + tJumpNode.heuristicCurNodeToEndLen.Value;
