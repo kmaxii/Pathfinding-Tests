@@ -62,7 +62,7 @@ namespace DetectionBehaviour
 
             return path;
         }
-         private void IdentifySuccessors(Vector2Int iPos, 
+         protected void IdentifySuccessors(Vector2Int iPos, 
              SimplePriorityQueue <Vector2Int> frontier,
              Dictionary<Vector2Int, Node> nodes)
          {
