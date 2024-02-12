@@ -93,7 +93,7 @@ public class Detection : MonoBehaviour
                 mapGenerator.seed = Random.Range(0, 10000);
                 mapGenerator.GenerateMap();
             }
-            Debug.LogError($"Update on a new map: {_currentRunsOnMap}/{totalRuns}! Map Size: {mapGenerator.width}");
+            Debug.LogError($"Update on a new map: {_currentRunsOnMap} | Total runs: {totalRuns} | Map Size: {mapGenerator.width}");
 
             
         }
