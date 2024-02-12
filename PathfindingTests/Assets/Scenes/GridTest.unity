@@ -506,7 +506,7 @@ MonoBehaviour:
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
   seed: 0
   frequency: 5
-  width: 20
+  width: 10
 --- !u!4 &1776321783
 Transform:
   m_ObjectHideFlags: 0
@@ -561,14 +561,16 @@ MonoBehaviour:
   resolutionBehaviour: {fileID: 11400000, guid: 86563f6a5f1148641abec13193ea657c, type: 2}
   gridVisual: {fileID: 358771623}
   cancelDurationFactor: 10
-  updatesToAverage: 1
+  updatesToAverage: 5
   timeMultiplier: 1000
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
   randomizeMap: 1
   mapGenerator: {fileID: 1776321782}
-  runsOnEachMap: 10
-  mapSizeIncrease: 50
-  stopAtMaxSize: 100
+  runsOnEachMap: 1000
+  mapSizeIncrease0_100: 5
+  mapSizeIncrease100_500: 25
+  mapSizeIncrease500_1000: 50
+  stopAtMaxSize: 1000
 --- !u!4 &2002827210
 Transform:
   m_ObjectHideFlags: 0

@@ -32,7 +32,7 @@ public class Detection : MonoBehaviour
     [SerializeField] private MapGenerator mapGenerator;
 
     [SerializeField] private int runsOnEachMap = 1;
-    [SerializeField] private int mapSizeIncrease = 0;
+    [SerializeField] private int mapSizeIncrease0_100, mapSizeIncrease100_500, mapSizeIncrease500_1000 = 0;
     [SerializeField] private int stopAtMaxSize = 1000;
      private int _currentRunsOnMap;
     
@@ -77,7 +77,15 @@ public class Detection : MonoBehaviour
             if (_currentRunsOnMap == runsOnEachMap)
             {
                 _currentRunsOnMap = 0;
-                mapGenerator.width += mapSizeIncrease;
+                
+                //  Different size change depending on how big the map is already.
+                //  This is to make sure the test doesnt take too long as it gets bigger and bigger
+                if(mapGenerator.width < 100)
+                    mapGenerator.width += mapSizeIncrease0_100;
+                else if (mapGenerator.width >= 500)
+                    mapGenerator.width += mapSizeIncrease100_500;
+                else
+                    mapGenerator.width += mapSizeIncrease500_1000;
                 
                 if (mapGenerator.width > stopAtMaxSize)
                     Application.Quit();
