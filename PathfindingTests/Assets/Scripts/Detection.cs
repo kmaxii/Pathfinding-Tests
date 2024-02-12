@@ -33,6 +33,7 @@ public class Detection : MonoBehaviour
 
     [SerializeField] private int runsOnEachMap = 1;
     [SerializeField] private int mapSizeIncrease = 0;
+    [SerializeField] private int stopAtMaxSize = 1000;
      private int _currentRunsOnMap;
     
     private int _currentUpdate;
@@ -77,9 +78,16 @@ public class Detection : MonoBehaviour
             {
                 _currentRunsOnMap = 0;
                 mapGenerator.width += mapSizeIncrease;
+                
+                if (mapGenerator.width > stopAtMaxSize)
+                    Application.Quit();
+                
                 mapGenerator.seed = Random.Range(0, 10000);
                 mapGenerator.GenerateMap();
             }
+            Debug.LogError($"Update on a new map: {_currentRunsOnMap}/{totalRuns}! Map Size: {mapGenerator.width}");
+
+            
         }
 
         //  Reset the grid
