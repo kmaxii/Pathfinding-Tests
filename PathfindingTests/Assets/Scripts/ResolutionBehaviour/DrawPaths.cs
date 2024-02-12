@@ -16,7 +16,7 @@ namespace ResolutionBehaviour
             Vector2Int previous = Vector2Int.zero;
             foreach (var transform in path)
             {
-                Detection.Lines.Add(new Tuple<Vector2Int, Vector2Int>(previous, transform));
+//                Detection.Lines.Add(new Tuple<Vector2Int, Vector2Int>(previous, transform));
 
                 previous = transform;
             }

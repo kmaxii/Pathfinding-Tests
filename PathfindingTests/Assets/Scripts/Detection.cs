@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
@@ -24,13 +22,19 @@ public class Detection : MonoBehaviour
     [Tooltip("The time the number that is written should be multiplied by to avoid E-... values.")]
     [SerializeField] private float timeMultiplier;
 
-    public static readonly HashSet<Tuple<Vector2Int, Vector2Int>> Lines = new();
     private readonly HashSet<int> _stoppedAlgorithms = new();
-    private List<List<float[]>> _dataToWrite = new();
+    private readonly List<List<float[]>> _dataToWrite = new();
     
 
     [SerializeField] private MapData mapData;
 
+    [SerializeField] private bool randomizeMap;
+    [SerializeField] private MapGenerator mapGenerator;
+
+    [SerializeField] private int runsOnEachMap = 1;
+    [SerializeField] private int mapSizeIncrease = 0;
+     private int _currentRunsOnMap;
+    
     private int _currentUpdate;
     private int totalRuns;
 
@@ -59,7 +63,6 @@ public class Detection : MonoBehaviour
 
     void Update()
     {
-        Lines.Clear();
 
         if (_stoppedAlgorithms.Count == detectionBehaviours.Count)
             Application.Quit();
@@ -68,6 +71,15 @@ public class Detection : MonoBehaviour
         if (resetStart) {
             resetStart = false;
             SetRandomStartAndEndPos();
+            
+            _currentRunsOnMap++;
+            if (_currentRunsOnMap == runsOnEachMap)
+            {
+                _currentRunsOnMap = 0;
+                mapGenerator.width += mapSizeIncrease;
+                mapGenerator.seed = Random.Range(0, 10000);
+                mapGenerator.GenerateMap();
+            }
         }
 
         //  Reset the grid
