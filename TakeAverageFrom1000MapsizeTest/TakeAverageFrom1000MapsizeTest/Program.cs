@@ -21,8 +21,8 @@ namespace CSVRowAverage
                 var lines = File.ReadAllLines(filePath);
                 int batchSize = 1000; // Number of rows per map size
                 int currentBatch = 0;
-                List<double[]> allNumericValues = new List<double[]>(); // To hold all numeric values for averaging
-                string mapSize = ""; // To store the current map size or identifier
+                List<double[]> allNumericValues = new List<double[]>(); // To hold all numeric values for processing
+                bool isFirstBatch = true; // To track if we're processing the first batch
 
                 // Generate new file name for averages
                 string directory = Path.GetDirectoryName(filePath);
@@ -31,41 +31,31 @@ namespace CSVRowAverage
 
                 using (var writer = new StreamWriter(newFilePath))
                 {
-                    foreach (var line in lines)
+                    string[] headers = lines.FirstOrDefault()?.Split(',');
+                    if (headers != null && headers.Length > 0)
                     {
-                        // Check if the line is numeric or text
+                        // Write headers for the new file, adjusting for average, min, max
+                        WriteHeaders(writer, headers);
+                    }
+
+                    foreach (var line in lines.Skip(1)) // Skip header row
+                    {
                         var stringValues = line.Split(',');
-                        if (stringValues.All(sv => double.TryParse(sv, NumberStyles.Any, CultureInfo.InvariantCulture, out _)))
+                        if (stringValues.All(sv => sv == stringValues.First() || double.TryParse(sv, NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedValue)))
                         {
                             // It's a numeric row
-                            double[] numericValues = new double[stringValues.Length];
-                            mapSize = stringValues[0]; // Always take the first value from the row as the map size
-
-                            for (int i = 1; i < stringValues.Length; i++) // Start from 1 to skip the map size column
-                            {
-                                if (!double.TryParse(stringValues[i], NumberStyles.Any, CultureInfo.InvariantCulture, out numericValues[i]))
-                                {
-                                    Console.WriteLine($"Warning: Unable to parse '{stringValues[i]}' to a double.");
-                                    numericValues[i] = 0; // Assign a default value or handle appropriately
-                                }
-                            }
-
+                            double[] numericValues = stringValues.Select(val => double.TryParse(val, NumberStyles.Any, CultureInfo.InvariantCulture, out double num) ? num : double.NaN).ToArray();
                             allNumericValues.Add(numericValues);
                             currentBatch++;
                         }
-                        else
-                        {
-                            // It's a text row, write it as-is
-                            writer.WriteLine(line);
-                            continue;
-                        }
 
                         // Check if we've reached 1000 rows or the end of the file
-                        if (currentBatch == batchSize || allNumericValues.Count == lines.Length)
+                        if (currentBatch == batchSize || lines.Last().Equals(line))
                         {
-                            WriteAverages(allNumericValues, writer, mapSize); // Write averages for the current batch to the new file
+                            WriteAverages(allNumericValues, writer); // Write averages, min, max for the current batch to the new file
                             allNumericValues.Clear(); // Reset for the next batch
                             currentBatch = 0; // Reset batch counter
+                            isFirstBatch = false; // Update the flag as the first batch has been processed
                         }
                     }
                 }
@@ -76,20 +66,45 @@ namespace CSVRowAverage
             }
         }
 
-        static void WriteAverages(List<double[]> values, StreamWriter writer, string mapSize)
+        static void WriteHeaders(StreamWriter writer, string[] headers)
+        {
+            // Assuming the first column does not require avg, min, max
+            var newHeaders = new List<string> { headers[0] }; // Keep the first header as is
+            for (int i = 1; i < headers.Length; i++)
+            {
+                newHeaders.Add($"Avg({headers[i]})");
+                newHeaders.Add($"Min({headers[i]})");
+                newHeaders.Add($"Max({headers[i]})");
+            }
+            writer.WriteLine(string.Join(",", newHeaders));
+        }
+
+        static void WriteAverages(List<double[]> values, StreamWriter writer)
         {
             if (values.Count == 0) return;
 
             int numberOfColumns = values[0].Length;
-            var averages = new List<string> { mapSize }; // Start with the map size
-            for (int i = 1; i < numberOfColumns; i++) // Start from 1 to skip the map size column
+            var resultRow = new List<string> { values.Select(v => v[0]).FirstOrDefault().ToString(CultureInfo.InvariantCulture) }; // First column value (map size or identifier)
+            for (int i = 1; i < numberOfColumns; i++)
             {
-                double columnAverage = values.Average(row => row[i]);
-                averages.Add(columnAverage.ToString(CultureInfo.InvariantCulture));
+                var columnValues = values.Select(row => row[i]).Where(val => !double.IsNaN(val) && val != 0).ToArray();
+                if (columnValues.Length > 0)
+                {
+                    resultRow.Add(columnValues.Average().ToString(CultureInfo.InvariantCulture));
+                    resultRow.Add(columnValues.Min().ToString(CultureInfo.InvariantCulture));
+                    resultRow.Add(columnValues.Max().ToString(CultureInfo.InvariantCulture));
+                }
+                else
+                {
+                    // If all values are zero or NaN, write NaN or a placeholder to indicate no valid data was found
+                    resultRow.Add("NaN");
+                    resultRow.Add("NaN");
+                    resultRow.Add("NaN");
+                }
             }
 
-            // Write the averages as a new line in the output file
-            writer.WriteLine(string.Join(",", averages));
+            // Write the result row for averages, mins, and maxes
+            writer.WriteLine(string.Join(",", resultRow));
         }
     }
 }
