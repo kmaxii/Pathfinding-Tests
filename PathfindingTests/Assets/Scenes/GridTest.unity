@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &54306002
 AudioListener:
   m_ObjectHideFlags: 0
@@ -223,7 +223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &358771623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +231,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 358771622}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d94460fc336e1b448603f43dd80baf8, type: 3}
   m_Name: 
@@ -407,7 +407,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1839735485 &1667872149
 Tilemap:
   m_ObjectHideFlags: 0
@@ -560,13 +560,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d0808ebfb6556d64ca04b038832e8742, type: 2}
   resolutionBehaviour: {fileID: 11400000, guid: 86563f6a5f1148641abec13193ea657c, type: 2}
   gridVisual: {fileID: 358771623}
-  cancelDurationFactor: 10
-  updatesToAverage: 5
+  cancelDurationSeconds: 10
+  updatesToAveragePerStartEndNode: 1
   timeMultiplier: 1000
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
   randomizeMap: 1
   mapGenerator: {fileID: 1776321782}
-  runsOnEachMap: 1000
+  runsOnEachMapSize: 1000
   mapSizeIncrease0_100: 5
   mapSizeIncrease100_500: 25
   mapSizeIncrease500_1000: 50
