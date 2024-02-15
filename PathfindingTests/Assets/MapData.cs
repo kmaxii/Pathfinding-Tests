@@ -8,13 +8,11 @@ using Debug = UnityEngine.Debug;
 [CreateAssetMenu(menuName = "Custom/MapData")]
 public class MapData : ScriptableObject
 {
-    public bool[,] map;
+    public bool[,] Map;
 
     [SerializeField] private GameEvent setMap;
 
     [SerializeField] private bool ensureConnectivity;
-
-    [SerializeReference] private GameEventWithVector2Int color;
     
     [HideInInspector] public Vector2Int startPos;
     [HideInInspector] public Vector2Int endPos;
@@ -22,7 +20,7 @@ public class MapData : ScriptableObject
     [FormerlySerializedAs("_width")] public int width;
 
     //Property to get the map size
-    public int MapSize => map.GetLength(0);
+    public int MapSize => Map.GetLength(0);
 
     //Method to check a coordinate
     public bool CheckCoordinate(int x, int y) {
@@ -30,22 +28,22 @@ public class MapData : ScriptableObject
         if (x < 0 || x >= width || y < 0 || y >= width) {
             return false;
         }
-        return map[x, y];
+        return Map[x, y];
     }
     
  
 
     //Method to set the map to x size and percent chance for each to be false
-    public void SetMap(int width, float frequency, int seed) {
+    public void SetMap(int newWidth, float frequency, int seed) {
         //  Measure the time for this function to run
         Stopwatch functionTimer = new Stopwatch();
         functionTimer.Start();
-        this.width = width;
-        map = new bool[width, width];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < width; y++) {
+        this.width = newWidth;
+        Map = new bool[newWidth, newWidth];
+        for (int x = 0; x < newWidth; x++) {
+            for (int y = 0; y < newWidth; y++) {
                 float val = Mathf.PerlinNoise(seed + x / frequency, seed +y / frequency);
-                map[x, y] = val < 0.5f;
+                Map[x, y] = val < 0.5f;
             }
         }
 
@@ -62,14 +60,6 @@ public class MapData : ScriptableObject
         setMap.Raise();
     }
     
-    private float PerlinNoiseWithSeed(float x, float y, int seed, float frequency)
-    {
-        float newX = (x + seed * 1000) * frequency;
-        float newY = (y + seed * 1000) * frequency;
-
-        return Mathf.PerlinNoise(newX, newY);
-    }
-
     void EnsureConnectivity() {
         List<List<Vector2Int>> regions = FindDisconnectedRegions();
 
@@ -87,16 +77,21 @@ public class MapData : ScriptableObject
         //  Measure the time for this function to run
         Stopwatch test = new Stopwatch();
         test.Start();
-        bool[,] visited = new bool[width, width];
+        bool[][] visited = new bool[width][];
+        for (int index = 0; index < width; index++)
+        {
+            visited[index] = new bool[width];
+        }
+
         List<List<Vector2Int>> regions = new List<List<Vector2Int>>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < width; y++) {
-                if (!visited[x, y] && map[x, y]) {
+                if (!visited[x][y] && Map[x, y]) {
                     List<Vector2Int> newRegion = new List<Vector2Int>();
                     Queue<Vector2Int> queue = new Queue<Vector2Int>();
                     queue.Enqueue(new Vector2Int(x, y));
-                    visited[x, y] = true;
+                    visited[x][y] = true;
 
                     while (queue.Count > 0) {
                         Vector2Int tile = queue.Dequeue();
@@ -106,9 +101,9 @@ public class MapData : ScriptableObject
                         foreach (var dir in new[] {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right}) {
                             Vector2Int next = tile + dir;
                             if (next.x >= 0 && next.x < width && next.y >= 0 && next.y < width) {
-                                if (!visited[next.x, next.y] && map[next.x, next.y]) {
+                                if (!visited[next.x][next.y] && Map[next.x, next.y]) {
                                     queue.Enqueue(next);
-                                    visited[next.x, next.y] = true;
+                                    visited[next.x][next.y] = true;
                                 }
                             }
                         }
@@ -124,55 +119,6 @@ public class MapData : ScriptableObject
         Debug.Log("Finding regions took: " + test.Elapsed.TotalSeconds);
         return regions;
     }
-
-    /*private void ConnectRegions(List<List<Vector2Int>> regions) {
-
-        int regionCount = regions.Count;
-        if (regionCount <= 1) return; // No need to connect if only one or no regions
-
-        // Step 1: Create all possible edges with distances between regions
-        List<(int regionA, int regionB, float distance, Vector2Int pointA, Vector2Int pointB)> edges =
-            new List<(int, int, float, Vector2Int, Vector2Int)>();
-        for (int i = regionCount - 1; i >= 0; i--) {
-            for (int j = i - 1; j >= 0; j--) {
-                float closestDistance = float.MaxValue;
-                Vector2Int closestPointA = Vector2Int.zero, closestPointB = Vector2Int.zero;
-
-
-                //  This part of the script runs slowly due to unneccesary repetition.
-                foreach (var pointA in regions[i]) {
-                    foreach (var pointB in regions[j]) {
-                        float distance = Distance(pointA, pointB);
-                        if (distance < closestDistance) {
-                            closestDistance = distance;
-                            closestPointA = pointA;
-                            closestPointB = pointB;
-                        }
-                    }
-                }
-                edges.Add((i, j, closestDistance, closestPointA, closestPointB));
-            }
-        }
-
-        // Step 2: Sort edges by distance to prepare for MST
-        edges.Sort((a, b) => a.distance.CompareTo(b.distance));
-
-        // Step 3: Find MST (Kruskal's algorithm simplified version)
-        int[] parent = new int[regionCount]; // Track the parent of each node in the MST
-        for (int i = 0; i < regionCount; i++) parent[i] = i; // Initially, each node is its own parent
-
-        foreach (var edge in edges) {
-            int rootA = Find(edge.regionA, parent);
-            int rootB = Find(edge.regionB, parent);
-
-            if (rootA != rootB) // If adding this edge does not form a cycle
-            {
-                parent[rootB] = rootA; // Connect the trees
-                CreatePath(edge.pointA, edge.pointB); // Create path between the closest points of these regions
-            }
-        }
-
-    }*/
 
     void ConnectRegions(List<List<Vector2Int>> regions) {
         // Assuming regions is a list of lists, where each sublist represents a region,
@@ -208,12 +154,17 @@ public class MapData : ScriptableObject
 
     List<(Vector2Int, Vector2Int)> ConnectCentroids(List<Vector2Int> centroids) {
         int n = centroids.Count;
-        float[,] distances = new float[n, n]; // Store distances between all pairs of centroids
+        float[][] distances = new float[n][]; // Store distances between all pairs of centroids
+        for (int index = 0; index < n; index++)
+        {
+            distances[index] = new float[n];
+        }
+
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
                 float distance = Vector2.Distance(centroids[i], centroids[j]);
-                distances[i, j] = distance;
-                distances[j, i] = distance; // Symmetric, so fill both [i, j] and [j, i]
+                distances[i][j] = distance;
+                distances[j][i] = distance; // Symmetric, so fill both [i, j] and [j, i]
             }
         }
 
@@ -228,8 +179,8 @@ public class MapData : ScriptableObject
             int closestIndex = -1;
             for (int i = 0; i < n; i++) {
                 if (!connected[i]) {
-                    if (distances[lastConnectedIndex, i] < minDistance) {
-                        minDistance = distances[lastConnectedIndex, i];
+                    if (distances[lastConnectedIndex][i] < minDistance) {
+                        minDistance = distances[lastConnectedIndex][i];
                         closestIndex = i;
                     }
                 }
@@ -244,26 +195,8 @@ public class MapData : ScriptableObject
 
         return connections;
     }
-
-    int Find(int i, int[] parent) {
-        if (i != parent[i]) parent[i] = Find(parent[i], parent); // Path compression
-        return parent[i];
-    }
-
+    
     private void CreatePath(Vector2Int closestTileA, Vector2Int closestTileB) {
-        /*// Create a simple straight path between the two closest tiles
-        Vector2Int direction = closestTileB - closestTileA;
-        int steps = Mathf.Max(Mathf.Abs(direction.x), Mathf.Abs(direction.y));
-        Vector2Int stepDir = new Vector2Int((int)Mathf.Sign(direction.x), (int)Mathf.Sign(direction.y));
-
-        for (int step = 0; step <= steps; step++)
-        {
-            Vector2Int currentTile = closestTileA + stepDir * step;
-            if (currentTile.x >= 0 && currentTile.x < _width && currentTile.y >= 0 && currentTile.y < _width)
-            {
-                map[currentTile.x, currentTile.y] = true; // Make the path walkable
-            }
-        }*/
 
         // Create a wider straight path between the two closest tiles
         Vector2Int direction = closestTileB - closestTileA;
@@ -284,11 +217,11 @@ public class MapData : ScriptableObject
         for (int step = 0; step <= steps; step++) {
             Vector2Int baseCurrentTile = closestTileA + stepDir * step;
 
-            var mapLength = Mathf.Sqrt(map.Length);
+            var mapLength = Mathf.Sqrt(Map.Length);
             
             if (baseCurrentTile.x >= 0 && baseCurrentTile.x <= mapLength - 1) {
                 if (baseCurrentTile.y >= 0 && baseCurrentTile.y <= mapLength - 1) {
-                    if (step > mapLength / 50 && map[baseCurrentTile.x, baseCurrentTile.y])
+                    if (step > mapLength / 50 && Map[baseCurrentTile.x, baseCurrentTile.y])
                         return;
                 }
             }
@@ -310,16 +243,16 @@ public class MapData : ScriptableObject
         if (tile.x >= 0 && tile.x < width && tile.y >= 0 &&
             tile.y < width) // Assuming _height is the height of your map
         {
-            map[tile.x, tile.y] = true; // Make the tile walkable
+            Map[tile.x, tile.y] = true; // Make the tile walkable
         }
     }
 
     public override string ToString() {
         string mapString = "";
-        for (int i = 0; i < map.GetLength(0); i++) {
+        for (int i = 0; i < Map.GetLength(0); i++) {
             mapString += "\n";
-            for (int j = 0; j < map.GetLength(1); j++) {
-                if (map[i, j]) {
+            for (int j = 0; j < Map.GetLength(1); j++) {
+                if (Map[i, j]) {
                     mapString += "_";
                 }
                 else {
@@ -330,10 +263,5 @@ public class MapData : ScriptableObject
 
         return mapString;
     }
-
-    private static float Distance(Vector2Int a, Vector2Int b) {
-        float num1 = (float) (a.x - b.x);
-        float num2 = (float) (a.y - b.y);
-        return num1 * num1 + num2 * num2;
-    }
+    
 }
