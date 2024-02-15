@@ -20,8 +20,8 @@ namespace DetectionBehaviour
             var x = position.x;
             var y = position.y;
 
-            int mapWidth = mapData.map.GetLength(0); // Assuming square map for width and height
-            int mapHeight = mapData.map.GetLength(1); // Use if map is not square
+            int mapWidth = mapData.Map.GetLength(0); // Assuming square map for width and height
+            int mapHeight = mapData.Map.GetLength(1); // Use if map is not square
 
             // Add cardinal neighbors
             // Up

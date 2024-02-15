@@ -47,12 +47,12 @@ namespace DetectionBehaviour
 
                 if (nodesStart.ContainsKey(posFromEnd))
                 {
-                    return (BuildBidirectionalPath(nodesStart, nodesEnd, start, end, posFromEnd), explored);
+                    return (BuildBidirectionalPath(nodesStart, nodesEnd, posFromEnd), explored);
                 }
 
                 if (nodesEnd.ContainsKey(posFromStart))
                 {
-                    return (BuildBidirectionalPath(nodesStart, nodesEnd, start, end, posFromStart), explored);
+                    return (BuildBidirectionalPath(nodesStart, nodesEnd, posFromStart), explored);
                 }
 
 
@@ -67,8 +67,6 @@ namespace DetectionBehaviour
 
         private static LinkedList<Vector2Int> BuildBidirectionalPath(Dictionary<Vector2Int, Node> nodesStart,
             Dictionary<Vector2Int, Node> nodesEnd,
-            Vector2Int start,
-            Vector2Int end,
             Vector2Int meetingPos)
         {
             var path = new LinkedList<Vector2Int>();

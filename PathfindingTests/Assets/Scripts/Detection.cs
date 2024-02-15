@@ -116,13 +116,13 @@ public class Detection : MonoBehaviour
 
     private void SetRandomStartAndEndPos() {
         do {
-            mapData.startPos = new Vector2Int(Random.Range(0, mapData.map.GetLength(0)),
-                Random.Range(0, mapData.map.GetLength(1)));
+            mapData.startPos = new Vector2Int(Random.Range(0, mapData.Map.GetLength(0)),
+                Random.Range(0, mapData.Map.GetLength(1)));
         } while (!mapData.CheckCoordinate(mapData.startPos.x, mapData.startPos.y));
 
         do {
-            mapData.endPos = new Vector2Int(Random.Range(0, mapData.map.GetLength(0)),
-                Random.Range(0, mapData.map.GetLength(1)));
+            mapData.endPos = new Vector2Int(Random.Range(0, mapData.Map.GetLength(0)),
+                Random.Range(0, mapData.Map.GetLength(1)));
         } while (!mapData.CheckCoordinate(mapData.endPos.x, mapData.endPos.y));
     }
 

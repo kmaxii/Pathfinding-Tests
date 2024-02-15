@@ -77,9 +77,9 @@ namespace Visualization
 
         public void VisualizeGrid() {
             //  Take the data from mapDataSO and visualize the bools in different colors
-            for (int i = 0; i < mapDataSo.map.GetLength(0); i++) {
-                for (int j = 0; j < mapDataSo.map.GetLength(1); j++) {
-                    if (mapDataSo.map[i, j]) {
+            for (int i = 0; i < mapDataSo.Map.GetLength(0); i++) {
+                for (int j = 0; j < mapDataSo.Map.GetLength(1); j++) {
+                    if (mapDataSo.Map[i, j]) {
                         //SpawnTileAndChangeColor(new Vector2Int(i, j), _colorSpace[0]);
                         SetTileOnTilemap(new Vector3Int(i, j, 0), _walkableTile);
                     }
