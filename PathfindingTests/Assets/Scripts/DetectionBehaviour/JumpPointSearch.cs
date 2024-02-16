@@ -41,8 +41,7 @@ namespace DetectionBehaviour
             return (BuildPath(nodes, start, end), explored);
         }
         
-        private static LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Node> nodes, Vector2Int start,
-            Vector2Int end)
+        private static LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Node> nodes, Vector2Int start, Vector2Int end)
         {
             var path = new LinkedList<Vector2Int>();
             var current = end;
@@ -55,12 +54,39 @@ namespace DetectionBehaviour
                 path.AddFirst(current);
 
                 Node parent = nodes[current].parent;
-                current = new Vector2Int(parent.x, parent.y);
+                Vector2Int next = new Vector2Int(parent.x, parent.y);
+
+                // Add intermediate nodes if necessary
+                AddIntermediateNodes(path, current, next);
+
+                current = next;
             }
 
             path.AddFirst(start); // Add the start node
 
             return path;
+        }
+        
+        
+        private static void AddIntermediateNodes(LinkedList<Vector2Int> path, Vector2Int from, Vector2Int to)
+        {
+            // Calculate differences in both axes
+            int dx = Math.Sign(to.x - from.x);
+            int dy = Math.Sign(to.y - from.y);
+
+            // Move diagonally
+            Vector2Int current = from;
+            while (current.x != to.x || current.y != to.y)
+            {
+                if (current.x != to.x) current.x += dx;
+                if (current.y != to.y) current.y += dy;
+
+                // Add the node before reaching 'to' to include all intermediate nodes
+                if (current != to)
+                {
+                    path.AddFirst(current);
+                }
+            }
         }
          protected void IdentifySuccessors(Vector2Int iPos, 
              SimplePriorityQueue <Vector2Int> frontier,
