@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Visualization;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -35,7 +36,9 @@ public class Detection : MonoBehaviour
     [SerializeField] private MapGenerator mapGenerator;
 
     [SerializeField] private int runsOnEachMapSize = 1;
-    [SerializeField] private int mapSizeIncrease0_100, mapSizeIncrease100_500, mapSizeIncrease500_1000 = 0;
+    [SerializeField] private int mapSizeIncreaseStage1;
+    [SerializeField] private int mapSizeIncreaseStage2;
+    [SerializeField] private int mapSizeIncreaseStage3 = 0;
     [SerializeField] private int stopAtMaxSize = 1000;
     private int _currentRunsOnMapSize;
 
@@ -80,11 +83,11 @@ public class Detection : MonoBehaviour
                 //  Different size change depending on how big the map is already.
                 //  This is to make sure the test doesnt take too long as it gets bigger and bigger
                 if (mapGenerator.width < 100)
-                    mapGenerator.width += mapSizeIncrease0_100;
+                    mapGenerator.width += mapSizeIncreaseStage1;
                 else if (mapGenerator.width >= 500)
-                    mapGenerator.width += mapSizeIncrease100_500;
+                    mapGenerator.width += mapSizeIncreaseStage3;
                 else
-                    mapGenerator.width += mapSizeIncrease500_1000;
+                    mapGenerator.width += mapSizeIncreaseStage2;
 
                 if (mapGenerator.width > stopAtMaxSize)
                     Application.Quit();
