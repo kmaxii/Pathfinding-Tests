@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: walkableTile
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 2a13593e8d479884eb18d0c150ea5a46, type: 3}
-  m_Color: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}
+  m_Color: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
   m_Transform:
     e00: 1
     e01: 0

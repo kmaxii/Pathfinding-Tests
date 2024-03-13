@@ -32,7 +32,9 @@ namespace DetectionBehaviour
 
             int explored = 0;
 
-            while (frontierStart.Count > 0 && frontierEnd.Count > 0)
+            int finalRuns = 0;
+            
+            while (frontierStart.Count > 0 && frontierEnd.Count > 0 && finalRuns < 4)
             {
 
                 yield return new WaitForSeconds(0.02f);
@@ -45,12 +47,14 @@ namespace DetectionBehaviour
                         color1.Raise(currentStart);
                     }
 
-                    if (cameFromEnd.ContainsKey(currentStart)) {
-                        meetNode = currentStart;
-                        break;
-                    }
+              
 
                     ExploreNeighbours(currentStart, end, cameFromStart, costSoFarStart, frontierStart);
+                    if (cameFromEnd.ContainsKey(currentStart)) {
+                        meetNode = currentStart;
+                        finalRuns++;
+                        continue;
+                    }
                 }
 
                 // Backward search step
@@ -61,12 +65,15 @@ namespace DetectionBehaviour
                     color2.Raise(currentEnd);
                 }
 
-                if (cameFromStart.ContainsKey(currentEnd)) {
-                    meetNode = currentEnd;
-                    break;
-                }
+            
 
                 ExploreNeighbours(currentEnd, start, cameFromEnd, costSoFarEnd, frontierEnd);
+                
+                if (cameFromStart.ContainsKey(currentEnd)) {
+                    meetNode = currentEnd;
+                    finalRuns++;
+                    continue;
+                }
             }
             
             
