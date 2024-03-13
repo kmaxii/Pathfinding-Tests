@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Priority_Queue;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace DetectionBehaviour
     [CreateAssetMenu(menuName = "Custom/Pathfinding/BiDirectionalJumpPointSearch")]
     public class BiDirectionalJumpPointSearch : JumpPointSearch
     {
-        public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end)
+        public override IEnumerator GetShortestPath(Vector2Int start, Vector2Int end)
         {
             var nodesStart = new Dictionary<Vector2Int, Node>();
             var nodesEnd = new Dictionary<Vector2Int, Node>();
@@ -47,12 +48,12 @@ namespace DetectionBehaviour
 
                 if (nodesStart.ContainsKey(posFromEnd))
                 {
-                    return (BuildBidirectionalPath(nodesStart, nodesEnd, posFromEnd), explored);
+                   break;
                 }
 
                 if (nodesEnd.ContainsKey(posFromStart))
                 {
-                    return (BuildBidirectionalPath(nodesStart, nodesEnd, posFromStart), explored);
+                    break;
                 }
 
 
@@ -60,8 +61,7 @@ namespace DetectionBehaviour
                 IdentifySuccessors(posFromEnd, frontierEnd, nodesEnd);
             }
 
-
-            return (new LinkedList<Vector2Int>(), explored);
+            yield return null;
         }
 
 

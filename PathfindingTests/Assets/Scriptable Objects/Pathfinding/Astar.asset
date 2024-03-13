@@ -16,3 +16,4 @@ MonoBehaviour:
   visualize: 1
   color1: {fileID: 11400000, guid: 0ab88c5cdaa731d4ba48b5d0c47f2da3, type: 2}
   color2: {fileID: 0}
+  finalPathColor: {fileID: 11400000, guid: dee094d6496782c40a06cd142edeb3f1, type: 2}

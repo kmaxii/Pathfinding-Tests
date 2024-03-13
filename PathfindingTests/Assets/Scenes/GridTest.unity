@@ -552,7 +552,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionBehaviours:
-  - {fileID: 11400000, guid: e0dcf0112055d9b4eb0aeed7e893df02, type: 2}
+  - {fileID: 11400000, guid: db224456bd665324a8586123a8d00bd6, type: 2}
   resolutionBehaviour: {fileID: 11400000, guid: 86563f6a5f1148641abec13193ea657c, type: 2}
   gridVisual: {fileID: 358771623}
   cancelDurationSeconds: 10

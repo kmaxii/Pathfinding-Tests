@@ -67,11 +67,16 @@ public class Detection : MonoBehaviour
         SetRandomStartAndEndPos();
     }
 
+    private bool hasRun = false;
     void Update() {
         if (_stoppedAlgorithms.Count == detectionBehaviours.Count)
             Application.Quit();
 
 
+        if (hasRun)
+            return;
+        hasRun = true;
+        
         if (resetStart) {
             resetStart = false;
             SetRandomStartAndEndPos();
@@ -170,8 +175,8 @@ public class Detection : MonoBehaviour
         var algorithm = detectionBehaviours[i];
         var startTime = Time.realtimeSinceStartup;
 
-        var algoResult = algorithm.GetShortestPath(mapData.startPos, mapData.endPos);
-        if (algoResult.Item1.Count > 0) {
+        StartCoroutine(algorithm.GetShortestPath(mapData.startPos, mapData.endPos));
+        /*if (algoResult.Item1.Count > 0) {
             var algorithmTime = Time.realtimeSinceStartup - startTime;
 
             resolutionBehaviour.Resolve(algoResult.Item1);
@@ -191,7 +196,7 @@ public class Detection : MonoBehaviour
             gridVisual.ResetGrid();
             gridVisual.VisualizeGrid();
             RunDetectionAlgorithm(i);
-        }
+        }*/
     }
 
     private void WriteToFile() {

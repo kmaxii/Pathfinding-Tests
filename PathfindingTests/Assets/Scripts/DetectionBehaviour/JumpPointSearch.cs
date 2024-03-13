@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Priority_Queue;
 using UnityEngine;
 
@@ -8,8 +10,10 @@ namespace DetectionBehaviour
     [CreateAssetMenu(menuName = "Custom/Pathfinding/JumpPointSearch")]
     public class JumpPointSearch : DetectionBehaviour
     {
-        public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end)
+        //a coroutine method called
+        public override IEnumerator GetShortestPath(Vector2Int start, Vector2Int end)
         {
+            
             var nodes = new Dictionary<Vector2Int, Node>();
             var frontier = new SimplePriorityQueue <Vector2Int>();
 
@@ -22,6 +26,7 @@ namespace DetectionBehaviour
 
             while (frontier.Count > 0)
             {
+                yield return new WaitForSeconds(0.02f);
                 explored++;
                 var currentPos = frontier.Dequeue();
                 
@@ -38,7 +43,13 @@ namespace DetectionBehaviour
                 
                 IdentifySuccessors(currentPos, frontier, nodes);
             }
-            return (BuildPath(nodes, start, end), explored);
+            
+            var path = BuildPath(nodes, start, end);
+            for (var i = path.Count - 1; i > 0; i--)
+            {
+                yield return new WaitForSeconds(delayForPathBuild);
+                finalPathColor.Raise(path.ElementAt(i));
+            }
         }
         
         private static LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Node> nodes, Vector2Int start, Vector2Int end)

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Priority_Queue;
 using UnityEngine;
 
@@ -7,7 +9,7 @@ namespace DetectionBehaviour
     [CreateAssetMenu(menuName = "Custom/Pathfinding/Astar")]
     public class AStar : DetectionBehaviour
     {
-        public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end)
+        public override IEnumerator GetShortestPath(Vector2Int start, Vector2Int end)
         {
             var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
             var costSoFar = new Dictionary<Vector2Int, float>();
@@ -20,6 +22,7 @@ namespace DetectionBehaviour
 
             while (frontier.Count > 0)
             {
+                yield return new WaitForSeconds(0.02f);
                 explored++;
                 var current = frontier.Dequeue();
                 if (visualize)
@@ -40,7 +43,12 @@ namespace DetectionBehaviour
                     cameFrom[next] = current;
                 }
             }
-            return (BuildPath(cameFrom, start, end), explored);
+            var path = BuildPath(cameFrom, start, end);
+            for (var i = path.Count - 1; i > 0; i--)
+            {
+                yield return new WaitForSeconds(delayForPathBuild);
+                finalPathColor.Raise(path.ElementAt(i));
+            }
         }
         
         private LinkedList<Vector2Int> BuildPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start,

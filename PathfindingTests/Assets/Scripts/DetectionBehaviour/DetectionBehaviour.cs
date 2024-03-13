@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using MaxisGeneralPurpose.Scriptable_objects;
 using UnityEngine;
@@ -11,8 +12,13 @@ namespace DetectionBehaviour
         [SerializeField] protected bool visualize;
         [SerializeField] protected GameEventWithVector2Int color1;
         [SerializeField] protected GameEventWithVector2Int color2;
+        
+        [SerializeField]protected GameEventWithVector2Int finalPathColor;
 
-        public abstract (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end);
+        protected float delayForPathBuild = 0.02f;
+
+        public abstract IEnumerator GetShortestPath(Vector2Int start, Vector2Int end)
+            ;
 
         protected IEnumerable<Vector2Int> GetNeighbours(Vector2Int position)
         {

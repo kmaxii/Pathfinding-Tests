@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Priority_Queue;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace DetectionBehaviour
     public class BiDirectionalAStar : DetectionBehaviour
 
     {
-        public override (LinkedList<Vector2Int>, int nodesExplored) GetShortestPath(Vector2Int start, Vector2Int end) {
+        public override IEnumerator GetShortestPath(Vector2Int start, Vector2Int end){
             // Set up for forward search
             var cameFromStart = new Dictionary<Vector2Int, Vector2Int>();
             var costSoFarStart = new Dictionary<Vector2Int, float>();
@@ -31,7 +32,10 @@ namespace DetectionBehaviour
 
             int explored = 0;
 
-            while (frontierStart.Count > 0 && frontierEnd.Count > 0) {
+            while (frontierStart.Count > 0 && frontierEnd.Count > 0)
+            {
+
+                yield return new WaitForSeconds(0.02f);
                 // Forward search step
                 if (frontierStart.Count > 0) {
                     explored++;
@@ -64,10 +68,15 @@ namespace DetectionBehaviour
 
                 ExploreNeighbours(currentEnd, start, cameFromEnd, costSoFarEnd, frontierEnd);
             }
-
-            return meetNode == null
-                ? (new LinkedList<Vector2Int>(), explored)
-                : (BuildPath(cameFromStart, cameFromEnd, start, end, meetNode.Value), explored);
+            
+            
+            
+            var path = BuildPath(cameFromStart, cameFromEnd, start, end, meetNode.Value);
+            for (var i = path.Count - 1; i > 0; i--)
+            {
+                yield return new WaitForSeconds(delayForPathBuild);
+                finalPathColor.Raise(path.ElementAt(i));
+            }
         }
 
         private void ExploreNeighbours(Vector2Int current, Vector2Int target,
