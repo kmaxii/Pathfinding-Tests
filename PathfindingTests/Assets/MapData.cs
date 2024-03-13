@@ -57,6 +57,22 @@ public class MapData : ScriptableObject
         //  debug.log the measured time
         functionTimer.Stop();
         Debug.Log("Map generation time: " + functionTimer.Elapsed.TotalSeconds);
+        
+        
+        //x33 y 3-4
+        
+        //x4  y7
+      //  Map[4, 7] = true;
+      
+      //X 43  //Y 34
+          Map[43, 34] = true;
+          
+          //x 49 Y: 14
+            Map[49, 14] = true;
+            
+            //48 Y: 42
+            Map[48, 42] = true;
+        
         setMap.Raise();
     }
     

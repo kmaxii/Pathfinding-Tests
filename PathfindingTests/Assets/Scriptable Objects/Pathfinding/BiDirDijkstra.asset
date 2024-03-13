@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BiDirDijkstra
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: df8a1f7fa17376d43975b94c8c020491, type: 2}
-  visualize: 0
+  visualize: 1
   color1: {fileID: 11400000, guid: 0ab88c5cdaa731d4ba48b5d0c47f2da3, type: 2}
   color2: {fileID: 11400000, guid: 48574296642cfcd428410f954c89bfa6, type: 2}

@@ -92,7 +92,8 @@ public class Detection : MonoBehaviour
                 if (mapGenerator.width > stopAtMaxSize)
                     Application.Quit();
 
-                mapGenerator.seed = Random.Range(0, 10000);
+                Debug.Log("Generating seed");
+                mapGenerator.seed = 500;
                 mapGenerator.GenerateMap();
             }
 
@@ -127,6 +128,13 @@ public class Detection : MonoBehaviour
             mapData.endPos = new Vector2Int(Random.Range(0, mapData.Map.GetLength(0)),
                 Random.Range(0, mapData.Map.GetLength(1)));
         } while (!mapData.CheckCoordinate(mapData.endPos.x, mapData.endPos.y));
+        
+        //x 48, 47
+        mapData.endPos = new Vector2Int(41, 40);
+        //x 3, 3
+        mapData.startPos = new Vector2Int(0, 0);
+        //Print out start and end pos
+        Debug.Log($"StartPos: {mapData.startPos} | EndPos: {mapData.endPos}");
     }
 
     private void RunAlgorithms() {
@@ -146,6 +154,8 @@ public class Detection : MonoBehaviour
 
         //  Set random start and end positions
         resetStart = true;
+        
+        
 
 
         // Reset variable
