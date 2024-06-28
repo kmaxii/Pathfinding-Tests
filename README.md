@@ -22,25 +22,22 @@ Below are visual representations of the five pathfinding algorithms used in the 
 
 <img src="https://cdn.discordapp.com/attachments/885157374036439042/1214576429321424956/kart_visaulisering_50x50.png?ex=66801672&is=667ec4f2&hm=13919fdc626b7b00937b6377bd44f17d4a975b40b71ed0e3f3332a46a7a3d978&" alt="All Pathfinding Algorithms" width="100%">
 
-### Dijkstra's Algorithm
+### Dijkstra's Algorithm‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎‎ ‎‎ ‎ ‎ Bidirectional Dijkstra's Algorithm
 
-<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476005178904616/Dijkstra-ezgif.com-video-to-gif-converter.gif?ex=668016e3&is=667ec563&hm=7fe1b4d2451cc996c502d9dd13d7a67b22d11b4bc6ae6c734c0a532a181a7020&f" alt="Dijkstra's Algorithm" width="300">
+<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476005178904616/Dijkstra-ezgif.com-video-to-gif-converter.gif?ex=668016e3&is=667ec563&hm=7fe1b4d2451cc996c502d9dd13d7a67b22d11b4bc6ae6c734c0a532a181a7020&f" alt="Dijkstra's Algorithm" width="300">‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ <img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476674375909406/BiDirDijkstra-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=956f6f81f10211e8beece5e30bc670c695916fd016fbb2ea05e160d8b4d8c816&" alt="Bidirectional Dijkstra's Algorithm" width="300">
 
-### Bidirectional Dijkstra's Algorithm
 
-<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476674375909406/BiDirDijkstra-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=956f6f81f10211e8beece5e30bc670c695916fd016fbb2ea05e160d8b4d8c816&" alt="Bidirectional Dijkstra's Algorithm" width="300">
+### 
 
-### A* Algorithm
 
-<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476673407029369/Astar-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=6494327b62ee3b82a4b2f82685c55876fe6a7ecaa1e9408e259077498011a5e8&" alt="A* Algorithm" width="300">
+### A* Algorithm‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎  ‎ ‎  ‎‎  ‎ ‎  ‎ ‎   ‎ ‎‎ ‎ ‎ Bidirectional A* Algorithm
 
-### Bidirectional A* Algorithm
+<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476673407029369/Astar-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=6494327b62ee3b82a4b2f82685c55876fe6a7ecaa1e9408e259077498011a5e8&" alt="A* Algorithm" width="300"> ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ <img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476674799538186/BidirAstar-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=3bf6148b5c95ce25a53a7348fbca95aabc394e84f3072627dbc92445a3ae0722&" alt="Bidirectional A* Algorithm" width="300">
 
-<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476674799538186/BidirAstar-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=3bf6148b5c95ce25a53a7348fbca95aabc394e84f3072627dbc92445a3ae0722&" alt="Bidirectional A* Algorithm" width="300">
 
-### Jump Point Search (JPS) Algorithm
+### ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎‎ ‎ ‎ ‎ Jump Point Search (JPS) Algorithm
 
-<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476673935769730/jPS-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=9a6a6ad12558a8da0ad3eb38de4c77d237ed663b402115196e7ea86ffaa811e8&" alt="Jump Point Search (JPS) Algorithm" width="300">
+ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎‎ ‎ ‎‎ ‎ ‎‎‎ ‎ ‎ ‎<img src="https://cdn.discordapp.com/attachments/885157374036439042/1217476673935769730/jPS-ezgif.com-video-to-gif-converter.gif?ex=66801782&is=667ec602&hm=9a6a6ad12558a8da0ad3eb38de4c77d237ed663b402115196e7ea86ffaa811e8&" alt="Jump Point Search (JPS) Algorithm" width="300">
 
 ## Repository Contents
 
