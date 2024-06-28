@@ -1,6 +1,6 @@
 # Pathfinding-test Repository
 
-Welcome to the Pathfinding-test repository, which includes the code for mine and Deminan Skoglövs bachelor thesis titled "Opportunities for improvement in Dijkstra's pathfinding algorithm." This study, written in Swedish, compares the efficiency of various graph search algorithms in a two-dimensional grid-based environment. Below, you'll find a brief summary of the thesis, along with visualizations and descriptions of the pathfinding algorithms explored.
+Welcome to the Pathfinding-test repository, which includes the code for mine and Demian Skoglövs bachelor thesis titled "Opportunities for improvement in Dijkstra's pathfinding algorithm." This study, written in Swedish, compares the efficiency of various graph search algorithms in a two-dimensional grid-based environment. Below, you'll find a brief summary of the thesis, along with visualizations and descriptions of the pathfinding algorithms explored.
 
 ## Thesis Summary
 
