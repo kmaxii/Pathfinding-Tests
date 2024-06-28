@@ -55,8 +55,8 @@ This repository contains the following:
 To get started with this repository, follow these steps:
 
 1. **Download Unity:**
-    ```Download Unity version 2021.3.4f1
-    ```
+    Download Unity version 2021.3.4f1
+    
 
 2. **Clone the repository:**
     ```sh
@@ -74,7 +74,7 @@ This project is licensed under the Apache-2.0 license License. See the [LICENSE]
 
 ## Acknowledgements
 
-This repository is part of my bachelor thesis at Högskolan i Skövde. Special thanks to my advisor, Andreas Jonasson, for their guidance and support.
+This repository is part of my bachelor thesis at Högskolan i Skövde. Special thanks to our advisor, Andreas Jonasson, for their guidance and support.
 
 For more details, you can read the full thesis [here](https://www.diva-portal.org/smash/record.jsf?dswid=-5593&pid=diva2%3A1850457&c=1&searchType=SIMPLE&language=en&query=Opportunities+for+improvement+in+Dijkstra%27s+pathfinding+algorithm&af=%5B%5D&aq=%5B%5D&aq2=%5B%5D&aqe=%5B%5D&noOfRows=50&sortOrder=author_sort_asc&sortOrder2=title_sort_asc&onlyFullText=false&sf=all).
 
